@@ -1,0 +1,119 @@
+---
+title: "Preliminary Analysis"
+output: html_notebook
+---
+
+for the preliminary analysis, all related packages are loaded, with a seed set for standardizing the results for train and test set sampling. Finally, our outcome variable is established as the multiplication of the ratio of Sale-to-list price, times the percent of listings selling above list price.
+```{r}
+suppressMessages(library(dplyr))
+suppressMessages(library(tidyverse))
+suppressMessages(library(mapview))
+suppressMessages(library(randomForest))
+suppressMessages(library(corrplot))
+suppressMessages(library(RColorBrewer))
+suppressMessages(library("PerformanceAnalytics"))
+suppressMessages(library(car))
+suppressMessages(library(regclass))
+suppressMessages(library(e1071))
+suppressMessages(library(caret))
+set.seed(1993)
+df <- read.csv("../../Data/data_cleaning.csv")
+train_ind = sample(seq(nrow(df)), 0.8*nrow(df), replace = FALSE, prob = NULL)
+df$y = df$StL_ratio*df$prct_above_list
+```
+
+
+In the following code, time-based features are extracted from the month column, such as year, month (as an integer), and season. 
+```{r}
+df$year = as.integer(substr(df$month,0,4))
+df$month = as.integer(substr(df$month,6,7))
+
+df = df %>% 
+   mutate(season = ifelse(month >= 3 & month <= 5,"Spring",ifelse(month >= 6 & month <= 8,"Summer",ifelse(month >= 9& month <= 11,"Fall","Winter"))))
+```
+
+Using longitude and latitude values present in the data, we can see where the largest densities of listings lie, and their overall value, in terms of our outcome variable, y.
+```{r}
+mapview(df,xcol="lng",ycol="lat",zcol="y",crs=4269)
+```
+
+Next, to be able to incorporate location into our modeling, we use a kmeans clustering model to determine clusters of coordinates, which will serve as our regions of consideration. As only longitude and latitude values are used in clustering, these clusters represent where the highest densities of listings exist.
+```{r}
+n_clusters = 8
+kmeans_loc_cluster = kmeans(select(df,c("lat","lng")),n_clusters)
+centers = data.frame(kmeans_loc_cluster$centers)
+#write.csv(centers,"../Data/cluster_centers.csv")
+df$loc_cluster=kmeans_loc_cluster$cluster
+mapview(as.data.frame(kmeans_loc_cluster$centers),xcol="lng",ycol="lat",crs=4269)
+```
+
+
+
+Next, a correlation plot is created to show if any variables suffer from inter-correlation, which we can see that some do -- primarily, variables directly related to housing price, such as mean price, median price, and the Zillow value index. Thus, of these variables, we decide to only use ZVHI in final modeling. 
+```{r}
+vars = select(df,c('SizeRank','ZVHI','inventory','median_list_price','median_sale_price','year','loc_cluster'))
+M <- cor(vars)
+
+corrplot(M, type="upper", order="hclust",
+         col=brewer.pal(n=8, name="RdYlBu"))
+
+
+chart.Correlation(vars, histogram=TRUE, pch=19)
+```
+
+Training and testing datasets are created using a random sample, with 80% dedicated to training and the remaining 20% dedicated to the test set. 
+```{r}
+#write.csv(df,"../Data/datacleaning_plus_addedfeatures.csv")
+train <- df[train_ind,]
+test <- df[-train_ind,]
+```
+
+
+A basic model is created to explore the potential relationships our regressors have with the dependent variable, to check for linearity, and to see if other assumptions hold to make linear regression a potentially good model choice.
+```{r}
+summary(lm(y~as.factor(loc_cluster)+as.factor(year),data=train))
+```
+
+As can be seen above, nearly all regressors are found to be very significant, and we achieve an adjusted R2 of .48. 
+
+As a test, we also perform various variable transformations on the dependent variable (taking 1/y) and the independent continuous variables (taking the log) to see if our adjusted R2 improves, which it does! This could be due to a variety of reasons, which will be explored a bit below.
+```{r}
+standard_model = lm(1/(y+1)~log(SizeRank)*log(ZVHI)+log(inventory)+as.factor(season)+as.factor(loc_cluster)+as.factor(year), data=train)
+standard_preds = predict(standard_model,test)
+summary(standard_model)
+```
+
+To understand if the assumptions of linear regression hold for this model, we use the standard linear regression plots to determine that the data is mostly normal, with some oddities on the extreme ends of the Q-Q plot, that our residuals do not show any strong patterns when plotted with the fitted values, which shows signs of homoscedasticity, but we see the potential of many outliers, as seen with Cook's distance. 
+```{r}
+plot(standard_model)
+```
+
+
+A Durbin Watson test is performed, which showed no signs of auto correlated residuals (due to high p-value).
+```{r}
+durbinWatsonTest(standard_model)
+```
+
+When calculating Cook's distance, we do see evidence of many points being potential outliers - about 1000 points in total. 
+```{r}
+cooksD <- cooks.distance(standard_model)
+influential <- cooksD[(cooksD > (3 * mean(cooksD, na.rm = TRUE)))]
+```
+
+
+Just as a test, we run a model excluding these influential points
+```{r}
+names_of_influential <- names(influential)
+outliers <- df[names_of_influential,]
+without_outliers <- df %>% anti_join(outliers)
+model_nooutliers <- lm(1/(y+1)~log(SizeRank)*log(ZVHI)+log(inventory)+as.factor(season)+as.factor(loc_cluster)+as.factor(year), data = without_outliers)
+summary(model_nooutliers)
+
+```
+As can be seen, the adjusted R2 improved considerably to 0.75. However, we decide in final modeling NOT to exclude these points, as they are a sizeable number of points, and thus might have valuable information that could make taking them out lead to a model with higher variance. Thus, we will explore other modeling techniques that can better handle outliers, such as SVM regressor models, KNN, and random forest models. 
+
+
+
+
+
+

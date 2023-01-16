@@ -1,0 +1,130 @@
+---
+title: "Data Collection and Formatting"
+author: "Group 33: Greg Foral, Seung Woo Choi, Eduardo Arias Villanueva, Tyler Jeron Lang"
+date: '2022-10-09'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyr)
+library(dplyr)
+```
+
+## Introduction
+
+For ease of analysis, combining all the seperate datasets into one 'master' dataset is ideal. To begin, we start by importing data from [Zillow Housing Data](https://www.zillow.com/research/data/)
+
+```{r imports}
+#contains the number of homes for sale
+inventory_for_sale_df <- read.csv('./data/inventory_for_sale.csv', header=TRUE)
+
+#contains the median list prices of homes for a region
+median_list_price_df <- read.csv('./data/median_list_price.csv', header=TRUE)
+
+#contains median sale prices of homes for a region
+median_sale_price_df <- read.csv('./data/median_sale_price.csv', header=TRUE)
+
+#contains median sale price to list price ratio of homes for a region
+median_sale_to_list_ratio_df <- read.csv('./data/median_sale_to_list_ratio.csv', header=TRUE)
+
+#contains percent of homes sold above list price for a region
+prct_homes_above_list_df <- read.csv('./data/prct_homes_above_list.csv', header=TRUE)
+
+#contains the Zillow Home Value Index (ZHVI) for a region. This value is calculated by Zillow to estimate the value of a home within the 35th to 65th percentile range
+zhvi_df <- read.csv('./data/ZHVI.csv', header=TRUE)
+```
+
+## Initial Inspection of Data
+
+We can now preview the initial dataframes and inspect if any changes need to be made:
+
+```{r inspect}
+head(inventory_for_sale_df, 5)
+```
+
+A couple things to note here that apply to all of the datasets imported above - the **date** columns are now prefixed with 'X' and follow the format Xmm.dd.yyyy. This is different from the actual format within the .csv files - the original **date** columns contained the '/' character which would result in an invalid column name, so R automatically converts these columns into a valid format. We will clean up these values later on in this notebook.
+
+Ideally, we can plan our 'master' dataset to contain the following schema:
+
+* Region ID
+* SizeRank
+* RegionName
+* RegionType
+* StateName
+* Latitude
+* Longitude
+* Month
+* Inventory_for_sale
+* Median_list_price
+* Median_sale_price
+* Median_StL_ratio
+* Prct_homes_above_list
+* ZHVI
+
+To follow this schema, we first have to reshape this dataframes from wide to long format:
+
+```{r reshape}
+inventory_for_sale_df <- inventory_for_sale_df %>%
+  gather(month, inventory, -c(RegionID, SizeRank, RegionName, RegionType, StateName))
+
+median_list_price_df <- median_list_price_df %>%
+  gather(month, median_list_price, -c(RegionID, SizeRank, RegionName, RegionType, StateName))
+
+median_sale_price_df <- median_sale_price_df %>%
+  gather(month, median_sale_price, -c(RegionID, SizeRank, RegionName, RegionType, StateName))
+
+median_sale_to_list_ratio_df <- median_sale_to_list_ratio_df %>%
+  gather(month, StL_ratio, -c(RegionID, SizeRank, RegionName, RegionType, StateName))
+
+prct_homes_above_list_df <- prct_homes_above_list_df %>%
+  gather(month, prct_above_list, -c(RegionID, SizeRank, RegionName, RegionType, StateName))
+
+zhvi_df <- zhvi_df %>%
+  gather(month, ZVHI, -c(RegionID, SizeRank, RegionName, RegionType, StateName))
+
+```
+
+Now we join the dataframes together:
+
+```{r merge}
+join_cols <- c('RegionID', 'SizeRank', 'RegionName', 'RegionType', 'StateName', 'month')
+
+main_df <- full_join(zhvi_df, inventory_for_sale_df, by=join_cols) %>%
+  full_join(., median_list_price_df, by=join_cols) %>%
+  full_join(., median_sale_price_df, by=join_cols) %>%
+  full_join(., median_sale_to_list_ratio_df, by=join_cols) %>%
+  full_join(., prct_homes_above_list_df, by=join_cols)
+
+head(main_df, 5)
+```
+
+It's important to consider the ZHVI dataset's date range, which goes back to Jan 2000 - much earlier than the other data sources. Therefore, there are many NULL values for the remaining variables.
+
+Next, we can use the [US Cities](https://www.kaggle.com/datasets/sergejnuss/united-states-cities-database?resource=download) dataset to join in location (lat / long) information:
+
+```{r geocode}
+
+#bring in the uscities location data, and concatinate the city / state columns to match
+#the formatting of the main_df
+location_df <- read.csv('./data/uscities.csv') %>%
+  select(city, state_id, lat, lng) %>%
+  unite(RegionName, c('city', 'state_id'), sep = ', ')
+
+main_df <- left_join(main_df, location_df, by='RegionName')
+```
+
+The last thing to do to prepare our dataset is to format the 'month' column, which is still prefixed with the 'X' character:
+
+```{r dateformat}
+main_df$month <- as.Date(main_df$month, format = "X%m.%d.%Y")
+
+head(main_df, 5)
+```
+
+Now that the date column is formatted, we are ready to start analyzing the data.
+
+```{r write}
+write.csv(main_df, './data/formatted_df.csv')
+```

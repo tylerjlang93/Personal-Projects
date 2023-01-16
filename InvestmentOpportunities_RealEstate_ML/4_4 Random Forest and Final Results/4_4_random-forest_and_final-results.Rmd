@@ -1,0 +1,275 @@
+---
+title: "Random Forest Regression"
+author: "Seung Woo Choi, Greg Foral, Tyler Lang, Eduardo Villanueva"
+date: "2022-11-07"
+output:
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Random Forest Regression
+
+In this notebook, we will build a random forest regression model to answer the primary research question.\
+
+The primary research question is: How can we build a regression model to predict the best housing investment opportunities in early 2023 for regions in the U.S.?\
+
+To build the random forest regression model, we will follow the below steps:\
+1. Read the dataset\
+2. Randomly split the data into train/test sets, allocating 70% of the data to training data and 30% to testing data.\
+3. Scale predictors (not necessary for random forest) - SKIP.\
+4. Build random forest model using the following response variable: y = percent above list * Sales-to-List ratio.\
+5. Use the test dataset to determine the RMSE (i.e. the evaluation metric).\
+6. Iterate after adjusting model parameters.\
+
+To start, let's clear the environment and set a random seed.
+
+```{r env}
+# Clear the environment
+rm(list=ls())
+
+# Set a random seed for code reproducibility
+set.seed(25)
+```
+
+Let's also install any necessary libraries.
+
+```{r lib}
+# Install libraries
+suppressMessages(library(dplyr))
+suppressMessages(library(ggplot2))
+suppressMessages(library(randomForest))
+suppressMessages(library(Metrics))
+suppressMessages(library(caret))
+suppressMessages(library(mapview))
+```
+
+Next, let's read in the dataset.
+
+```{r data}
+# Read the dataset
+data <- read.csv('../../Data/datacleaning_plus_addedfeatures.csv', header=TRUE)
+
+# View dataset
+glimpse(data)
+```
+
+"X.1" and "X" are not needed for modeling, so we will drop these two variables.
+
+```{r drop var}
+# Drop 'X.1' and 'X'
+data <- data[, -which(names(data) %in% c('X.1', 'X'))]
+
+# View data
+glimpse(data)
+```
+
+Now that we have the data, let's split the data into training and testing datasets. The training set will have 70% of the data, and the testing set will have 30% of the data.
+
+```{r split data}
+# Randomly split data into training and testing sets
+my_sample <- sample(x = nrow(data),
+                    size = floor(nrow(data)*0.7),
+                    replace = FALSE,
+                    prob = NULL)
+
+# Training data
+train_data <- data[my_sample, ]
+
+# Testing data
+test_data <- data[-my_sample, ]
+```
+
+Scaling predictors is not necessary for random forest models, so we will skip this step and move onto the next one.\
+
+We will now build the random forest regression model, using 'y' as the response variable.\
+
+We chose SizeRank, ZVHI, inventory, year, season, and loc_cluster as our predictors because the remaining independent variables are already represented by other variables, including the dependent variable (e.g. StL_ratio and prct_above_list are represented by y, and latitude and longitude are represented by loc_cluster).\
+
+We decided to set mtry to the (number of predictors)/3 since this is standard practice for random forest regression.
+
+```{r random forest}
+# Number of predictors: n/3 for regression (standard)
+num_pred <- round(6/3, 0)
+
+# Random forest regression model
+rfr <- randomForest(y~SizeRank + ZVHI + inventory + year + season + loc_cluster,
+                    data = train_data,
+                    mtry = num_pred,
+                    importance = TRUE)
+
+# View model output
+rfr
+```
+
+The model output above shows that 500 trees were used and 2 variables were tried at each split. The predictors used explain 87.95% of the variability in the response variable, which is fairly good.\
+
+We will then use the testing dataset to determine the RMSE (i.e. the evaluation metric).
+
+```{r preds}
+# Predict 'y' values on the testing dataset using the model built on the training dataset
+test_data$preds <- predict(rfr, test_data)
+
+# Calculate the RMSE of the random forest regression model
+rfr_rmse <- rmse(test_data$y, test_data$preds)
+
+# View RMSE
+rfr_rmse
+```
+
+The RMSE achieved and a summary of the various iterations are detailed below.
+
+### Summary of Iterations
+1. In our first iteration, we used all the predictors available (minus 'y') and set mtry to 6. This resulted in an RMSE of 0.003447621, which is excellent but seemed too good to be true. We included 'StL_ratio' and 'prct_above_list', which are the two variables used to calculate 'y', so the model was indeed too good to be true and not a viable model.\
+2. In our second iteration, we changed the predictors to 'SizeRank + ZVHI + inventory + year + season + loc_cluster' and set mtry to 2. This resulted in an RMSE of 0.05863465, which is very good. While random forest regression models perform well, they tend to lack interpretability. However, this model may be considered when we compare models to find the optimal model.\
+3. In our third iteration, we changed the predictors to 'SizeRank + ZVHI + year' and set mtry to 1. This resulted in an RMSE of 0.09574926, which is quite good. Although this did not produce the highest performing model, the model is relatively simple with a strong performance.\
+
+### Model Optimization
+
+So far, we primarily focused on tuning the model by manually adjusting the predictors and mtry settings. Next, we will use cross validation and tune the parameter, mtry, using a grid search.\
+
+```{r optimization, eval=FALSE, echo=FALSE}
+# Model optimization - DO NOT RUN this code block (Expected run time: > 30 minutes)
+
+# Define train_control
+train_control <- trainControl(method='cv', number=5, search='grid')
+
+# Set a random seed
+set.seed(25)
+
+# Define parameters to tune via a grid search
+tunegrid <- expand.grid(.mtry=c(1:6))
+
+# Grid search using random forest regression to determine the best value for mtry
+rfr_gs <- train(y~SizeRank + ZVHI + inventory + year + season + loc_cluster,
+                  data=data,
+                  method='rf',
+                  tuneGrid=tunegrid,
+                  trControl=train_control
+                  )
+
+# View the model output
+print(rfr_gs)
+```
+
+The grid search shows that the best model had an RMSE of 0.05296666 and mtry of 6.\
+
+Let's re-run the original random forest regression model using the optimal value for mtry (i.e. mtry = 6).
+
+```{r}
+# Random forest regression model using the optimal mtry value
+rfr_optimal <- randomForest(y~SizeRank + ZVHI + inventory + year + season + loc_cluster,
+                    data = train_data,
+                    mtry = 6,
+                    importance = TRUE)
+
+# Predict 'y' values on the testing dataset using the model built on the training dataset
+test_data$preds_optimal <- predict(rfr_optimal, test_data)
+
+# Calculate the RMSE of the random forest regression model
+rfr_optimal_rmse <- rmse(test_data$y, test_data$preds_optimal)
+
+# View RMSE
+rfr_optimal_rmse
+```
+
+The optimized random forest regression model produces an RMSE of 0.05623866.
+
+### Data Visualizations
+
+Below are some visualizations to explain what's going on in the random forest model.
+
+```{r plot actual vs. predicted y}
+# Plot of actual vs. predicted 'y' values
+plot(test_data$y, test_data$preds_optimal,
+     main='Plot of Actual y vs. Predicted y',
+     xlab='Actual y', ylab='Predicted y')
+abline(0,1)
+```
+
+The plot above shows that the predicted 'y' values have a linear relationship with the actual 'y' values.
+
+```{r plot residuals}
+# Plot of residuals
+plot(test_data$y, scale(test_data$preds_optimal - test_data$y),
+     main='Plot of Residuals',
+     xlab='Actual y', ylab='Scaled Residuals')
+abline(0,0)
+```
+
+The plot of residuals shows that most data points are symmetrically distributed, lie near the middle of the graph, and don't exhibit any clear patterns. While there are some values along the x-axis that appear to be influential points/outliers, the residual plot generally looks good.
+
+```{r feature importance}
+# Feature importance - For both metrics, higher = better
+importance(rfr_optimal)
+```
+
+Two metrics that describe feature importance in random forest regression models include: %IncMSE and IncNodePurity.\
+
+%IncMSE is a metric that indicates how important a variable is for prediction. It measures the amount that the MSE of predictions would increase by if a random variable was used instead of its actual value.\
+
+IncNodePurity is a metric used to determine how much splitting on a variable improves the purity, or the similarity of data points in a leaf.\
+
+For both metrics, a higher value means that the variable is more important for the model.
+
+```{r plot feature importance}
+# Plot importance metrics
+varImpPlot(rfr)
+```
+
+Based on the %INCMSE chart above, the 3 most important features for the model are: (1) year, (2) season, and (3) loc_cluster. ZVHI and SizeRank are important features as well, but inventory did not seem particularly important.\
+
+Based on the IncNodePurity chart above, the 3 most important features are: (1) year, (2) ZVHI, and (3) SizeRank. In comparison, inventory, loc_cluster, and season were not as important to the model.
+
+
+## Final Predictions on Return by Location
+
+Given that the optimal random forest model above performed the best among all models we tried and optimized, we must answer our final question: which location cluster has the highest chance of seeing listings with highest returns in 2023? In other words, what geographical area should we move our firm to maximize potential returns in property investments? 
+
+To answer this question, now having faith in our model's parameters, we create one final model using all the data we have available. Then, to demonstrate the value of the location, new test points must be created that equally balance all other factors involved in prediction, to then reveal which location cluster is predicted to have higher returns, all-else-equal. 
+
+A sample of the three continuous variables is taken as a sequence of values from the min and max per variable. As our firm will hypothetically move in 2023, the year is thus set to 2023, and all seasons are considered. Finally, an expanded grid of all possible combinations of values in these 6 variables are turned into a dataframe, which will then be used for prediction. 
+
+```{r}
+SizeRank = seq(min(data$SizeRank),max(data$SizeRank),50)
+ZVHI = seq(min(data$ZVHI),max(data$ZVHI),50000)
+inventory = seq(min(data$inventory),max(data$inventory),4000)
+year= c(2023)
+season = c("Summer","Spring","Fall","Winter")
+loc_cluster = c(1,2,3,4,5,6,7,8)
+
+to_test = data.frame(expand.grid(SizeRank,ZVHI,inventory,year,season,loc_cluster))
+colnames(to_test) <- c("SizeRank", "ZVHI", "inventory", "year", "season", "loc_cluster")
+to_test$season = as.character(to_test$season)
+```
+
+The model is created below, using all possible true data, to maximize training value, given that our model is already chosen and deemed to be optimal. 
+Predictions are then made on the hypothetical dataset. 
+
+```{r}
+rfr_optimal_forhypothetical <- randomForest(y~SizeRank + ZVHI + inventory + year + season + loc_cluster,
+                    data = data,
+                    mtry = 6,
+                    importance = TRUE)
+
+hypothetical_preds = predict(rfr_optimal_forhypothetical, to_test)
+to_test$preds = hypothetical_preds
+```
+
+Finally, to reveal which locations are, all-else-equal, predicted to have the highest potential returns on investment, we consider two final metrics: the mean predicted value of returns per location cluster, as well as the percent of data points predicted to be higher than the mean + 1 standard deviation of the returns of our true data set, thus signaling areas with high predicted percent of homes being above-average in returns. After plotting both using the MapView package, it can be seen that the second final metric shows more variability among the regions, and thus we use this metric as our final determination of value per region. 
+
+```{r}
+centers = read.csv("../../Data/cluster_centers.csv")
+mean_preds = to_test %>% mutate(above_50 = preds > mean(data$y)+sd(data$y)) %>% group_by(loc_cluster) %>% summarize(mean_preds = mean(preds),median_preds = median(preds),above_50 = sum(above_50)/n())
+centers$mean = mean_preds$mean_preds 
+centers$median = mean_preds$median_preds
+centers$percent_above_average = mean_preds$above_50
+mapview(centers,xcol="lng",ycol="lat",zcol="mean",crs=4269)
+mapview(centers,xcol="lng",ycol="lat",zcol="percent_above_average",crs=4269)
+
+```
+
+As can be seen, the Midwest is predicted to have the highest potential value of return, all other factors equal. In general, northern regions are predicted to have much higher value than all southern regions, with the southeast region consistently being predicted to have the lowest returns of all. 

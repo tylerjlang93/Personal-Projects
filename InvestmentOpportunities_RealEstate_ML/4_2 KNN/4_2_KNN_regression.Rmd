@@ -1,0 +1,189 @@
+---
+title: "Model Building - KNN"
+author: "Group 33: Greg Foral, Seung Woo Choi, Eduardo Arias Villanueva, Tyler Jeron Lang"
+date: "2022-11-04"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(dplyr)
+library(caret)
+```
+
+## Preparations
+
+To get started, we should load our dataset as it is right now.
+
+```{r preparations}
+df <- read.csv('../../Data/datacleaning_plus_addedfeatures.csv', header=TRUE)
+
+df$season = as.factor(df$season)
+df$loc_cluster = as.factor(df$loc_cluster)
+
+dummies <- dummyVars(data = df, y ~ SizeRank + ZVHI + inventory + year + season + loc_cluster)
+
+df <- cbind(as.data.frame(df$y), predict(dummies, df))
+colnames(df)[1] <- "y"
+```
+
+## Fitting the KNN model
+
+We are now ready to fit our data to a KNN model.
+
+```{r}
+model <- knnreg(data = df, y ~ .)
+
+model
+
+```
+
+As we can see, the data has been fitted to a 5-nearest neighbor regression model.
+
+## Using Ridge regression
+
+We can leverage on the Ridge regression to get multiple k values, and see which one works best.
+
+```{r}
+model <- train(
+  data = df, 
+  y ~ ., 
+  method = 'knn',
+  use.all = FALSE
+               )
+
+model
+```
+
+Here we get some of the k values that were tested. The script finally decided to go with k = 9.
+We can also plot this to get a nice representation.
+
+```{r}
+plot(model)
+```
+
+## Pre-processing 
+
+So far we have went all-in with our data. However, for models to get the best performance and results, we should do some pre-processing first. To do that, we should center and scale our numerical data.
+
+```{r}
+model2 <- train(
+  data = df, 
+  y ~ ., 
+  method = 'knn',
+  preProcess = c('center', 'scale'),
+  use.all = FALSE
+               )
+
+model2
+
+plot(model2)
+```
+Our RMSE has greatly decreased! Also, let us note that the value of k has gone back to 5 after the processing step.
+
+## Splitting our data
+
+In real world applications, we would split our dataset into training and testing parts. And that is what we are going to do right now.
+
+```{r}
+set.seed(123)
+
+inTrain <- createDataPartition(df$SizeRank, p = 0.7, list = FALSE)
+train_df <- df[inTrain,]
+test_df <- df[-inTrain,]
+```
+
+Now we can fit the train data to our model.
+
+```{r}
+model3 <- train(
+  data = train_df, 
+  y ~ ., 
+  method = 'knn',
+  preProcess = c('center', 'scale'),
+  use.all = FALSE
+               )
+```
+We can compare the performance of this model to the testing data.
+
+```{r}
+
+predictions <- predict(model3, newdata = test_df)
+
+# RMSE
+
+sqrt(sum((subset(test_df, select = y) - predictions)^2)/nrow(test_df))
+
+# R2
+
+cor(subset(test_df, select = y), predictions)^2
+```
+ 
+We can observe that both the RMSE and R2 values are bit better than before.
+ 
+## Cross validation
+ 
+We can now start looking into cross-validation. We start this by setting k-fold cross-validation. Here, we will use a 10-fold variation. 
+
+```{r}
+ctrl <- trainControl(
+  method = "cv",
+  number = 10
+)
+```
+
+Next, we should retrain our model, introducing our 10-fold cross-validation object.
+
+```{r}
+model4 <- train(
+  data = train_df, 
+  y ~ ., 
+  method = 'knn',
+  preProcess = c('center', 'scale'),
+  trControl = ctrl,
+  use.all = FALSE
+               )
+
+plot(model4)
+```
+
+We can also check the performance of this new iteration on the testing data.
+
+```{r}
+
+predictions <- predict(model4, newdata = test_df)
+
+# RMSE
+
+sqrt(sum((subset(test_df, select = y) - predictions)^2)/nrow(test_df))
+
+# R2
+
+cor(subset(test_df, select = y), predictions)^2
+```
+
+We get the same exact results as in the previous model.
+
+## Testing other parameters
+
+We can try other k values, to see if other ones could perform better and return greater accuracy
+
+```{r}
+tuneGrid <- expand.grid(
+  k = seq(5, 15, by = 1)
+)
+
+model5 <- train(
+  data = train_df, 
+  y ~ ., 
+  method = 'knn',
+  preProcess = c('center', 'scale'),
+  trControl = ctrl,
+  tuneGrid = tuneGrid,
+  use.all = FALSE
+               )
+
+model5
+```
+

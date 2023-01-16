@@ -1,0 +1,91 @@
+---
+title: "SVM Modeling"
+output: html_notebook
+---
+
+```{r}
+library(dplyr)
+library(tidyverse)
+library(mapview)
+library(randomForest)
+library(corrplot)
+library(RColorBrewer)
+library("PerformanceAnalytics")
+library(car)
+library(regclass)
+library(e1071)
+library(caret)
+set.seed(1993)
+
+```
+
+
+
+
+```{r}
+df = read.csv("../../Data/datacleaning_plus_addedfeatures.csv")
+```
+
+
+
+```{r}
+svm_df = df %>% select("y","SizeRank","ZVHI","inventory","season","loc_cluster","year")
+svm_to_scale = svm_df %>% select("SizeRank","ZVHI","inventory") %>% scale() %>% data.frame()
+svm_df$SizeRank = svm_to_scale$SizeRank
+svm_df$ZVHI = svm_to_scale$ZVHI
+svm_df$inventory = svm_to_scale$inventory
+train_ind = sample(seq(nrow(df)), 0.8*nrow(df), replace = FALSE, prob = NULL)
+svm_train = svm_df[train_ind,]
+svm_test = svm_df[-train_ind,]
+```
+
+
+```{r}
+modelsvm = svm(y~SizeRank+ZVHI+inventory+as.factor(season)+as.factor(loc_cluster)+year,svm_train)
+
+#Predict using SVM regression
+predYsvm = predict(modelsvm, svm_test)
+
+#Overlay SVM Predictions on Scatter Plot
+plot(svm_test$y-predYsvm, predYsvm)
+
+sqrt(mean((svm_test$y-predYsvm)^2))
+```
+
+
+
+```{r}
+set.seed(1993)
+val_ind = sample(seq(nrow(svm_train)), 0.2*nrow(svm_train), replace = FALSE, prob = NULL)
+val_set = svm_train[val_ind,]
+train_set = svm_train[-val_ind,]
+
+kernels = c("linear","polynomial","radial","sigmoid")
+RMSEs = c()
+
+for(kernel in kernels){
+  modelsvm = svm(y~SizeRank+ZVHI+inventory+as.factor(season)+as.factor(loc_cluster)+year,kernel = kernel,data=train_set)
+  predYsvm = predict(modelsvm, val_set)
+  RMSEs = cbind(RMSEs,sqrt(mean((val_set$y-predYsvm)^2)))
+}
+
+
+RMSEs
+
+# Best kernel = Radial
+
+modelsvm = svm(y~SizeRank+ZVHI+inventory+as.factor(season)+as.factor(loc_cluster)+year,kernel='radial',data=svm_train)
+
+#Predict using SVM regression
+predYsvm = predict(modelsvm, svm_test)
+sqrt(mean((svm_test$y-predYsvm)^2))
+```
+
+
+
+```{r}
+x = 1:length(svm_test$y)
+plot(x, svm_test$y, pch=18, col="red")
+lines(x, predYsvm, lwd="1", col="blue")
+legend(20,0.9,c("True Test Points","Predicted Test Points"),c("red","blue"))
+```

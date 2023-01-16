@@ -1,0 +1,143 @@
+---
+title: "data_cleaning"
+output: html_document
+date: "2022-10-15"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Data Cleaning
+
+The goal of this notebook is to add to my previous work on data cleaning.\
+
+More specifically, I will handle missing values using various methods.
+
+```{r env}
+# Clear the environment
+rm(list = ls())
+
+# Set a random seed for code reproducibility
+set.seed(25)
+```
+
+```{r libraries}
+# Install required libraries
+#install.packages("tidyr", repos = "http://cran.us.r-project.org")
+#library(tidyr)
+```
+
+```{r data}
+# Read the formatted csv file
+data <- read.csv(file = "../../Data/prelim_data_cleaning.csv")
+
+# View the structure of the data
+str(data)
+```
+
+I will drop 3 columns since they don't contribute to the analysis: X.1, X, and ts_month.\
+
+Note: I created a Datetime object called "ts_month" in a previous notebook, but I'm dropping it here since when I call the data file, it doesn't get read as a Datetime object.
+
+```{r drop columns}
+# Drop columns "X.1", "X", and "ts_month"
+data <- subset(data, select = -c(X.1, X, ts_month))
+str(data)
+```
+
+Let's review the percentage of missing values again.
+
+```{r missing values}
+# Create a list of column names
+col_names <- colnames(data)
+
+# Define a function to print the percentage of missing values for variables that have missing values
+missing_values_pct <- function(my_data, my_list) {
+  for (each_item in my_list) {
+  num_na <- sum(is.na(my_data[, each_item]))
+  if (num_na > 0) {
+    pct_mv <- round((num_na / nrow(my_data)) * 100, 2)
+    cat(each_item, ": ", pct_mv, '%', '\n')
+  }
+  }
+}
+
+# Call the missing_values_pct function
+missing_values_pct(data, col_names)
+```
+
+There are 8 variables with missing values, 5 of which have less than 5% of missing values and 3 of which have greater than 40% of missing values.\
+
+For our analysis, we are using the following as dependent variables: (1) prct_above_list, and (2) StL_ratio. All other variables will be used as predictors. It appears that our two response variables have the highest percentage of missing values.\
+
+Before dropping any rows, we have 50512 observations in our data.\
+
+**Method 1:** Drop all rows with missing values.
+
+```{r method 1}
+# Method 1: Drop all rows with missing values
+data_1 <- data[complete.cases(data), ]
+str(data_1)
+```
+
+```{r check na 1}
+# Check missing values for data_1
+col_names_1 <- colnames(data_1)
+missing_values_pct(data_1, col_names_1)
+```
+
+Method 1 results in 31430 observations getting removed, leaving 19082 observations to analyze. If we were to use Method 1, we would keep 37.8% of the original data.\
+
+**Method 2:** Drop all rows with missing values for the two response variables (i.e. prct_above_list and StL_ratio). In this case, dropping all null values for prct_above_list takes care of the null values for StL_ratio. The remaining missing values should then be imputed.
+
+```{r method 2}
+# Method 2: Drop all rows with missing values for the two response variables
+data_2 <- data[!is.na(data$prct_above_list), ]
+str(data_2)
+```
+
+```{r check na 2}
+# Check missing values for data_2
+col_names_2 <- colnames(data_2)
+missing_values_pct(data_2, col_names_2)
+```
+
+Method 2 results in 28853 observations getting removed, leaving 21659 observations to analyze. If we were to use Method 2, we would keep 42.9% of the original data.\
+
+**Method 3:** Change the timeframe to 2020-2022 and then drop all missing values. The year 2020 is selected because that is approximately when the two response variables appear in the data.
+
+```{r method 3}
+# Method 3: Change date to 2020-2022 and then drop all missing values
+data_3 <- data[data$ts_month >= '2020-01-01', ]
+str(data_3)
+```
+
+```{r check na 3}
+# Check missing values for data_3
+col_names_3 <- colnames(data_3)
+missing_values_pct(data_3, col_names_3)
+```
+
+```{r method 3 drop nas}
+# Drop all missing values
+data_3 <- data_3[complete.cases(data_3), ]
+str(data_3)
+```
+
+```{r check na 3 again}
+# Check missing values for data_3 after dropping all missing values
+col_names_3 <- colnames(data_3)
+missing_values_pct(data_3, col_names_3)
+```
+
+Method 3 results in X observations getting removed, leaving 13425 observations to analyze. If we were to use Method 3, we would keep 26.6% of the original data.\
+
+### Cleaned Data
+
+Based on the results of the three methods outlined above, I will use Method 1 since it retains a decent percentage of the original data and doesn't require messy imputations for the data.
+
+```{r save as csv}
+# Write as csv file in Data folder
+write.csv(data_1, "../../Data/data_cleaning.csv")
+```

@@ -1,0 +1,186 @@
+---
+title: "Model Building - Multiple Linear Regression"
+author: "Group 33: Greg Foral, Seung Woo Choi, Eduardo Arias Villanueva, Tyler Jeron Lang"
+date: "2022-11-04"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+```
+
+## Simple Multiple Linear Regression
+
+First, we will build a simple multiple linear regression model. The dataset is imported, randomly split into train/test datasets with a 70/30 split, and then the numerical features are scaled and centered. Once these steps have been performed, the model is built with the following dependent variable (y). It is a measure of quantifying how 'good' an investment would be. It is the product of the percent above list and the Sales-to-List ratio. After the model is built, we can predict values on the test dataset and then calculate the RMSE. We will be using the RMSE values to choose the best-performing model:
+
+```{r cars}
+library(dplyr)
+
+df <- read.csv('./data/datacleaning_plus_addedfeatures.csv', header=TRUE)
+
+#build test/train dataset
+set.seed(123)
+
+sample <- sample.int(n = nrow(df), size = floor(.70*nrow(df)), replace = F)
+train_df <- df[sample, ]
+test_df <- df[-sample, ]
+
+#scale the dataset
+train_df[c(4, 8, 9, 10, 11, 12, 14,15,16, 18, 20)] <- scale(train_df[c(4, 8, 9, 10, 11, 12, 14,15,16, 18, 20)])
+test_df[c(4, 8, 9, 10, 11, 12, 14,15,16, 18, 20)] <- scale(test_df[c(4, 8, 9, 10, 11, 12, 14,15,16, 18, 20)])
+
+mlr_mdl <- lm(y ~ SizeRank + ZVHI + inventory + year + season + loc_cluster, data = train_df)
+
+#predict values on the 'test' dataset
+test_df$mlr_prediction <- predict(mlr_mdl, test_df)
+
+#calculate the RMSE of this model
+mlr_RMSE <- sqrt(
+  sum((test_df$y - test_df$mlr_prediction)^2) / nrow(test_df)
+)
+
+print(mlr_RMSE)
+```
+
+The RMSE value for the simple multiple linear regression model is `r toString(mlr_RMSE)`.
+
+## Log Transformations
+
+```{r}
+log_lin_mdl <- lm(log(y+1) ~ SizeRank + ZVHI + inventory + year + season + loc_cluster, data = train_df)
+
+#predict values on the 'test' dataset
+test_df$log_lin_prediction <- predict(log_lin_mdl, test_df)
+
+#calculate the RMSE of this model
+log_lin_RMSE <- sqrt(
+  sum((test_df$y - test_df$log_lin_prediction)^2) / nrow(test_df)
+)
+print("RMSE of log-linear transformation: ")
+print(log_lin_RMSE)
+```
+
+The RMSE value for the simple multiple linear regression model after a log - linear transformation is `r toString(log_lin_RMSE)`
+
+
+## PCA Regression
+
+Next, we can try to use Principle Component Analysis (PCA) to improve the model. PCA has several advantages - first, it removes features that may be correlated with each other. Additionally, we can avoid over fitting the model by reducing the dimensionality of our model. The main disadvantage is our model is more difficult to interpret.
+
+To begin, we use the PCR (Principle Component Regression) function to run cross-validation on our model and build the principle components:
+
+```{r PCA}
+library(pls)
+
+pca_mdl <- pcr(y ~ SizeRank + ZVHI + inventory + year + season + loc_cluster, data = train_df, scale=TRUE, validation="CV")
+
+summary(pca_mdl)
+
+validationplot(pca_mdl)
+```
+
+From the validation plot above, the RMSEP (Root Mean Square Percentage Error) 'flattens' at 5 principle components; therefore, adding more principle components will have minimal impact on our model. We then use 5 components to build our model, make some predictions, and calculate the RMSE value:
+
+```{r PCA 2}
+test_df$pca_pred <- predict(pca_mdl, test_df, ncomp = 5)
+
+PCA_RMSE <- sqrt(
+  sum((test_df$y - test_df$pca_pred)^2) / nrow(test_df)
+)
+
+print(PCA_RMSE)
+```
+
+The RMSE value from principle component analysis is `r toString(PCA_RMSE)`
+
+## LASSO Regression
+
+LASSO Regression can also be used to try to improve the model. LASSO aims to minimize the complexity of the model by reducing multicollinearity. We can use the glmnet function to calculate the optimal lambda value (hyperparameter) for our model, then use that lambda value to make our predictions and calculate the RMSE. Note the lambda value here is small, so the 'penalty' is therefore also small:
+
+```{r LASSO}
+library(glmnet)
+
+predictors <- data.matrix(train_df[, c('SizeRank', 'ZVHI', 'inventory', 'year', 'season', 'loc_cluster')])
+
+responses <- train_df$y
+
+LASSO_mdl <- cv.glmnet(predictors, responses, alpha = 1)
+
+plot(LASSO_mdl)
+
+best_lambda <- LASSO_mdl$lambda.min
+
+print("The best lambda value for our LASSO Regression model is: ")
+print(best_lambda)
+
+```
+
+```{r LASSO 2}
+
+test_df$LASSO_pred <- predict (LASSO_mdl, s=best_lambda, newx = data.matrix(test_df[, c('SizeRank', 'ZVHI', 'inventory', 'year', 'season', 'loc_cluster')]))
+
+LASSO_RMSE <- sqrt(
+  sum((test_df$y - test_df$LASSO_pred)^2) / nrow(test_df)
+)
+
+print(LASSO_RMSE)
+```
+
+The RMSE value from LASSO Regression is `r toString(LASSO_RMSE)`
+
+
+## Stepwise Regression
+
+Lastly, we can use forward & backwards stepwise regression to build a multiple linear regression model. The intent of using forward & backwards stepwise regression is to reduce the number of variables in our model with minimal impact to the overall accuracy:
+
+```{r stepwise forwards}
+#forward stepwise regression
+intercept_mdl <- lm(y~1, data=train_df)
+all_mdl <- lm(y ~ SizeRank + ZVHI + inventory + year + season + loc_cluster, data=train_df)
+
+forward_step <- step(intercept_mdl, direction='forward', scope=formula(all_mdl), trace=0)
+
+forward_step$anova
+forward_step$coefficients
+```
+
+```{r stepwise backwards}
+#forward stepwise regression
+backward_step <- step(all_mdl, direction='backward', scope=formula(all_mdl), trace=0)
+
+backward_step$anova
+backward_step$coefficients
+```
+
+```{r predictions}
+test_df$fwd_prediction <- predict(forward_step, test_df)
+test_df$bkw_prediction <- predict(backward_step, test_df)
+
+fwd_RMSE <- sqrt(
+  sum((test_df$y - test_df$fwd_prediction)^2) / nrow(test_df)
+)
+
+bkw_RMSE <- sqrt(
+  sum((test_df$y - test_df$bkw_prediction)^2) / nrow(test_df)
+)
+
+print("The RMSE from the forward stepwise regression is:")
+print(fwd_RMSE)
+print("The RMSE from the backward stepwise regression is:")
+print(bkw_RMSE)
+```
+
+Unfortunately, neither forward or backwards stepwise regression simplified the model - no variables were removed. Therefore, stepwise regression is unnecessary for our model.
+
+## Summary
+
+In this document, we performed PCA, LASSO Regression, and forward/backwards Stepwise regression in addition to the simple multiple linear regression:
+
+* **PCA**: Performing PCA reduced the dimensionality of the dataset to 5 variable, which is a minimal impact. Additionally, PCA decreases the interpretability of our model, so in our opinion the tradeoff with variable reduction is not worth the decrease in interpretability.
+
+* **LASSO Regression**: The optimal lambda value here is very small, so the 'penalty' term is also very small, meaning performing LASSO regression has minimal impact. 
+
+* **Stepwise Regression**: Both forward/backwards stepwise regression doesn't remove any variables from our model, so it is unnecessary. 
+
+* **Simple Multiple Linear Regression**: This model had the lowest RMSE value and was the easiest to interpret. Therefore, we recommend using this model over the others mentioned here. 

@@ -1,0 +1,177 @@
+---
+title: "preliminary_eda-and-data-cleaning"
+output: html_document
+date: "2022-10-12"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Preliminary EDA
+
+Let's start by clearing the environment and setting a random seed to allow for code reproducibility.
+
+```{r env}
+# Clear the environment
+rm(list = ls())
+
+# Set a random seed for code reproducibility
+set.seed(25)
+```
+
+Let's install any required libraries.
+
+```{r libraries, results = 'hide'}
+# Install required libraries
+install.packages("xts", repos = "http://cran.us.r-project.org")
+library(xts)
+
+install.packages("lubridate", repos = "http://cran.us.r-project.org")
+library(lubridate)
+
+library(ggplot2)
+```
+
+Let's retrieve the formatted csv file: formatted_df.csv.
+
+```{r data}
+# Read the formatted csv file
+data <- read.csv(file = "../0_Data Collection and Formatting/data/formatted_df.csv")
+
+# View the structure of the data
+str(data)
+```
+
+Looking at the data, I notice two main things: (1) some variables require a data type conversion (e.g. RegionID and month) and (2) some variables have lots of missing values.\
+
+Let's handle the data type conversions first.
+
+```{r dtype conversion}
+# Convert RegionID from int to chr
+data$RegionID <- as.character(data$RegionID)
+typeof(data$RegionID)
+
+# Create a new variable, ts_month, with data type "Date"
+data$ts_month <- ymd(data$month)
+
+# View the dataframe with ts_month
+data <- data[order(data$ts_month), ]
+str(data)
+```
+
+The data type conversions are complete for now.\
+
+Let's explore the missing values.
+
+```{r missing values}
+# Create a list of column names
+col_names <- colnames(data)
+
+# Define a function to print the number of missing values for all variables
+missing_values <- function(my_data, my_list) {
+  for (each_item in my_list) {
+  num_na <- sum(is.na(my_data[, each_item]))
+  cat(each_item, ": ", num_na, '\n')
+  }
+}
+
+# Call the missing_values function
+missing_values(data, col_names)
+```
+
+The above shows the total number of missing values per variable.
+
+```{r}
+# Define a function to print the percentage of missing values for variables that have missing values
+missing_values_pct <- function(my_data, my_list) {
+  for (each_item in my_list) {
+  num_na <- sum(is.na(my_data[, each_item]))
+  if (num_na > 0) {
+    pct_mv <- round((num_na / nrow(my_data)) * 100, 2)
+    cat(each_item, ": ", pct_mv, '%', '\n')
+  }
+  }
+}
+
+# Call the missing_values_pct function
+missing_values_pct(data, col_names)
+```
+
+The above shows the percentage of missing values for the variables that have missing values.\
+
+Based on the code output above, it appears that the variables - ZVHI, inventory, median_list_price, median_sale_price, StL_ratio, prct_above_list, lat, and lng - all have missing values. Of the variables with missing values, ZVHI, inventory, median_list_price, median_sale_price, StL_ratio, and prct_above_list have percentages of missing values that exceed 5%.\
+
+```{r total missing values}
+# Make a copy of data
+temp_data <- data.frame(data)
+
+# Create a new column in temp_data for total missing values
+temp_data$total_mv <- vector(mode="integer", length=nrow(temp_data))
+
+# Define a function that adds 1 to a number
+plus_one <- function(x) {
+  x + 1
+}
+
+# Define a function that sums the number of total missing values per row
+sum_mv <- function(my_data, col_names) {
+  index_tracker <- 1
+  for (each_row in 1:nrow(my_data)) {
+  total_mv <- sum(is.na(my_data[each_row, col_names]))
+  my_data$total_mv[index_tracker] <- total_mv
+  index_tracker <- plus_one(index_tracker)
+  }
+  return(my_data)
+}
+
+# Call sum_mv function
+temp_data <- sum_mv(temp_data, col_names)
+str(temp_data)
+```
+
+```{r missing value plot}
+# Plot date vs. missing values to see where we're missing the most values
+ggplot(data = temp_data, aes(x=ts_month, y=total_mv)) + geom_bar(stat='identity')
+
+# Another plot using data from 2017 onwards
+ggplot(data = temp_data[temp_data$ts_month >= '2017-01-01', ], aes(x=ts_month, y=total_mv)) + geom_bar(stat='identity')
+```
+
+Based on the plots above, it looks like most of the missing values came from earlier years. We will adjust the time period of our analysis so that we focus on the year 2018 to the present-day.
+
+```{r new data}
+# Create a new dataframe with data from 2018-present day
+clean_data <- data[data$ts_month >= '2018-01-01', ]
+
+# View the new dataframe
+str(clean_data)
+```
+
+```{r check new data for missing values}
+# Call the missing_values_pct function to check the new dataframe
+missing_values_pct(clean_data, col_names)
+```
+
+While median_sale_price, StL_ratio, and prct_above_list still have a high percentage of missing values, ZVHI, inventory, median_list_price, lat, and lng now have below 5% in missing values.
+
+```{r save as csv}
+# Write as csv file in Data folder
+write.csv(clean_data, "../../Data/prelim_data_cleaning.csv")
+```
+
+### Appendix (Supplemental Code)
+
+```{r unique values}
+# Define a function to print the unique values for all variables
+unique_values <- function(my_data, my_list) {
+  for (each_item in my_list) {
+  uv <- unique(my_data[, each_item])
+  cat(each_item, ": ", uv, '\n')
+  }
+}
+
+# Call the unique_values function - DO NOT RUN (too many output values)
+#unique_values(data, col_names)
+```
+

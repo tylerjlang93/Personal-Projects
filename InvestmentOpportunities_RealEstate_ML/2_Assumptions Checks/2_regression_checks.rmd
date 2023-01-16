@@ -1,0 +1,107 @@
+---
+title: "Checking for Normality, Multicollinearity and Independence"
+author: "Group 33: Greg Foral, Seung Woo Choi, Eduardo Arias Villanueva, Tyler Jeron Lang"
+date: '2022-10-12'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyr)
+library(dplyr)
+library(car)
+library(tidyverse)
+library(broom)
+library(gridExtra)
+```
+
+## Introduction
+
+We first need to load the data onto this workspace
+
+```{r imports}
+# Reading the formatted dataframe
+
+df <- read.csv("../../Data/datacleaning_plus_addedfeatures.csv")
+
+head(df)
+```
+The dataset we're going to use here is the one produced by the previous EDA step.
+
+## Setting up the model
+
+Now that the data is loaded, we'll create the model. In this case, the model is the same as the used in the EDA step.
+
+```{r}
+standard_model = lm(1/(y+1)~log(SizeRank)*log(ZVHI)+log(inventory)+as.factor(season)+as.factor(loc_cluster)+as.factor(year), data=df)
+summary(standard_model)
+```
+
+As we can observe, most of our predictors carry significance.
+
+## Getting Diagnostic Metrics
+
+Let's run some diagnostic metrics, which we will use later.
+
+```{r}
+model.diag.metrics <- augment(standard_model)
+head(model.diag.metrics)
+```
+
+## Fitted values and residuals
+
+Here, we are going to plot the fitted values and residuals, to see how they compare against the observations.
+
+```{r}
+residplot1 <- ggplot(model.diag.metrics, aes(`log(ZVHI)`, `1/(y + 1)`)) +
+  geom_point() +
+  stat_smooth(method = lm, se = FALSE) +
+  geom_segment(aes(xend = `log(ZVHI)`, yend = .fitted), color = "red", size = 0.1, alpha = 0.2)
+
+residplot2 <- ggplot(model.diag.metrics, aes(`log(SizeRank)`, `1/(y + 1)`)) +
+  geom_point() +
+  stat_smooth(method = lm, se = FALSE) +
+  geom_segment(aes(xend = `log(SizeRank)`, yend = .fitted), color = "red", size = 0.1, alpha = 0.2)
+
+residplot3 <- ggplot(model.diag.metrics, aes(`log(inventory)`, `1/(y + 1)`)) +
+  geom_point() +
+  stat_smooth(method = lm, se = FALSE) +
+  geom_segment(aes(xend = `log(inventory)`, yend = .fitted), color = "red", size = 0.1, alpha = 0.2)
+
+grid.arrange(residplot1, residplot2, residplot3, nrow = 2, ncol = 2)
+```
+As we can observe, in all of these numerical plots we observe huge variability in the fitted values versus our entries.
+
+## Checking our diagnostic plots
+
+We start by creating the diagnostic plots in the model.
+
+```{r}
+par(mfrow = c(2, 2))
+plot(standard_model)
+```
+* Residuals vs. Fitted: Here, we see that our plot suggests a linear relationship (after the log transformations in our model), albeit a variability-heavy one.
+* Normal Q-Q: Residuals seem to be normally distributed, corresponding to each quantile in almost perfection.
+* Scale-Location: While the points are all over the place, the line is quite horizontal, so we can conclude that the dataset has homogeneity.
+* Residuals vs Leverage: While most data points are contained in the lower values of Leverage, there's quite a bunch that appear in the higher values.
+
+## Influential Values
+
+To get the influential values, we have to plot Cook's distance and Residuals vs Leverage.
+
+```{r}
+par(mfrow = c(1, 2))
+plot(standard_model, 4, id.n = 5)
+plot(standard_model, 5)
+```
+We can further take a look at the top 5 most extreme values in the Cook's distance plot
+
+```{r}
+model.diag.metrics %>%
+  top_n(5, wt = .cooksd)
+```
+
+We can see that the top 5 most extreme values are ones that register a difference of approximately 0.2 points between their true response values and the fitted ones.
+
+
