@@ -1,0 +1,416 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Global Inflation</title>
+<meta name="description"Visulization 1">
+<meta name="keywords" content="CSE6242 Final Project - Team 77">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="style.css" rel="stylesheet" type="text/css" />
+
+</head>
+<body>
+<div id="fb-root"></div>
+
+<!-- START PAGE SOURCE -->
+<div class="main">
+  <div class="header">
+    <div class="header_resize">
+      <div class="logo">
+          <br>
+        <!-- <h1><a href="index.html"></a><img src="miami.jpg" alt="MiamiVice"/></h1> -->
+      </div>
+      <div class="clr"></div>
+
+      <ul id="qm0" class="qmmc">
+
+          <li><a class="qmparent" href="about.html">About</a></li>
+          <li><a class="qmparent" href="GlobalInflation.html"> Global Inflation</a></li>
+          <li><a class="qmparent" href="CanadianInflation.html"> Canadian Inflation</a></li>
+          <li><a class="qmparent" href="FoodInsecurity.html">Food Insecurity</a></li>
+
+          <li class="qmclear">&nbsp;</li>
+      </ul>
+
+
+
+      <div class="clr"></div>
+    </div>
+  </div>
+  <div class="content">
+      <div class="content_resize">
+          <div class="mainbar">
+              <div class="article">
+                  <h2> Global Inflation</h2>
+                  <div class="clr"></div>
+                  <p class="infopost"></p>
+                  Explore inflation around the world by selecting a year of interest from the dropdown list; the World map will display the inflation rate at that time.
+                  Select a country and see how inflation in that country compares to Canada over time.
+
+              </div>
+              <div class="clr"></div>
+
+          </div>
+
+
+          <body>
+              <select id="YearDropdown" style="position: absolute; top: 300px; left:125px"></select>
+              <!--<script type="text/javascript" src="lib/d3.v5.min.js"></script>-->
+              <script src="https://d3js.org/d3.v7.min.js"></script>
+              <script>
+
+                  var margin = { top: 25, right: 25, bottom: 25, left: 100 };
+                  var width = 900 - margin.left - margin.right; // Use the window's width
+                  var height = 350 - margin.top - margin.bottom; // Use the window's height
+                  var colorScheme = ["#ffffbf", "#fee08b", "#fdae61", "#f46d43", "#d53e4f", "#9e0142"]
+
+
+                  var parseDate = d3.timeParse("%Y")
+
+                  function getRandomSubarray(arr, size) {
+                      var shuffled = arr.slice(0), i = arr.length, temp, index;
+                      while (i--) {
+                          index = Math.floor((i + 1) * Math.random());
+                          temp = shuffled[index];
+                          shuffled[index] = shuffled[i];
+                          shuffled[i] = temp;
+                      }
+                      return shuffled.slice(0, size);
+                  }
+                  ////////////////////
+                  /////////////////
+
+
+                  function createMapAndLegend(worldmap, selectedYear, data) {
+                      const projection = d3.geoNaturalEarth1()
+                          .scale(width)
+                          .translate([width / 2, 75]).scale(100).center([0, 40]);
+                      const path = d3.geoPath().projection(projection);
+                      var world_map = worldmap.features
+                      d3.select("#map").select("#countries").remove()
+                      d3.select("#map").append("g").attr("id", "countries").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+                      d3.select("#map").select("#legend").remove()
+                      d3.select("#map").append("g").attr("id", "legend").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+                      world_map.forEach(function (c, ind) {
+                          d3.select("#map").select("#countries")
+                              .append("path")
+                              .datum(c)
+                              .attr("class", c["properties"]["name"])
+                              .attr("d", path)
+                              .style("stroke", "BlanchedAlmond")
+                              .attr("fill", "grey")
+
+                      })
+
+
+                      var domain_vals = []
+                      var temp_data = []
+                      data.forEach(function (dtpt, i) {
+                          if (dtpt.year === selectedYear) {
+                              if (dtpt.value !== null) {
+                                  domain_vals.push(dtpt.value)
+                                  temp_data.push(dtpt)
+                              }
+                          }
+                      })
+
+                      quantile = d3.scaleQuantile().domain(domain_vals).range(colorScheme)
+                      domain_vals.sort(function (a, b) {
+                          return a - b;
+                      });
+
+
+
+                      range_vals = [domain_vals[0]]
+                      domain_vals.forEach(function (val, ind) {
+                          if (ind > 0) {
+                              if (val !== null) {
+                                  if (quantile(domain_vals[ind]) != quantile(domain_vals[ind - 1])) {
+                                      range_vals.push(domain_vals[ind - 1])
+                                  }
+                              }
+                          }
+                      })
+                      range_vals.push(d3.max(domain_vals))
+
+                      temp_data.forEach(function (d, i) {
+                          country_selector_array = d.Country.split(" ")
+                          country_selector = ""
+                          country_selector_array.forEach((wrd, i) => {
+                              country_selector = country_selector.concat(".", wrd)
+                          })
+
+                          d3.select("#map").select("#countries").selectAll("" + country_selector + "")
+                              .style("fill", quantile(d.value))
+                      })
+
+
+                      leg_sqr_size = 15
+                      range_vals.forEach(function (val, ind) {
+                          if (ind > 0) {
+                              val1 = range_vals[ind - 1].toFixed(2)
+                              val2 = range_vals[ind].toFixed(2)
+                              d3.select("#map").select("#legend")
+                                  .append("text")
+                                  .attr("x", 25)
+                                  .attr("y", ind * 30 + 50)
+                                  .attr("font-family", "sans-serif")
+                                  .style("font-size", "14px")
+                                  .attr("dominant-baseline", "middle")
+                                  .text("" + val1 + " to " + val2 + "")
+                              d3.select("#map").select("#legend")
+                                  .append("rect")
+                                  .attr("x", 0)
+                                  .attr("y", (ind * 30) + 50 - leg_sqr_size / 2)
+                                  .attr("width", leg_sqr_size)
+                                  .attr("height", leg_sqr_size)
+                                  .attr("fill", quantile(val2))
+                          }
+                      })
+
+                      d3.select("#map").select("#legend")
+                          .append("text")
+                          .attr("x", 50)
+                          .attr("y", 0)
+                          .attr("text-anchor", "middle")
+                          .text("Year")
+                          .attr("font-family", "sans-serif")
+                          .style("font-size", "18px")
+                      d3.select("#map").select("#legend")
+                          .append("text")
+                          .attr("x", 50)
+                          .attr("y", 60)
+                          .attr("text-anchor", "middle")
+                          .text("Inflation Rate")
+                          .attr("font-family", "sans-serif")
+                          .style("font-size", "18px")
+
+                      var mouseover = function (d) {
+                          d3.select(this)
+                              .style("stroke", "black")
+                              .style("opacity", 1)
+                      }
+
+                      var mouseleave = function (d) {
+                          d3.select(this)
+                              .style("stroke", "BlanchedAlmond")
+                              .style("opacity", 1)
+                      }
+
+                      var mouseclick = function (d) {
+                          console.log(this)
+                          country = d3.select(this).attr("class")
+                          final_list = ['Canada']
+                          final_list.push(country)
+                          if (distinctCountries.includes(country)) { plotter(final_list, data) }
+
+                      }
+
+
+                      d3.select("#map").select("#countries").selectAll("path")
+                          .on("mouseover", mouseover)
+                          .on("mouseleave", mouseleave)
+                          .on("click", mouseclick)
+
+
+
+                  }
+
+                  /////////////////////
+                  ////////////////////
+                  function plotter(plottedCountries, data) {
+                      /////////////////////////////////////// SVG ///////////////////////////////////////////////////////
+                      d3.select("#container").remove()
+                      d3.select("#line_chart")
+                          .append("g")
+                          .attr("id", "container")
+                          .attr("transform", "translate(" + margin.right + "," + margin.top + ")");
+                      ///////////////////////////////// TITLE ////////////////////////////////////////////////////////////////////////
+                      d3.select("body").select("#line_chart").select("#container").append("g").attr("id", "lines")
+                      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                      var valsForAxes = [];
+                      plottedCountries.forEach(function (c, i) {
+                          t = data.filter(function (d) { return d.Country === c })
+                          t.forEach(function (d) { q = d.value === null ? 0 : d.value; valsForAxes.push(q) })
+                      })
+
+                      /////////////////////////////// SCALES AND AXES //////////////////////////////////////
+                      var minDate = d3.min(years);
+                      var maxDate = d3.max(years);
+                      var max_y = d3.max(valsForAxes);
+                      var min_y = d3.min(valsForAxes);
+                      var y = d3.scaleLinear()
+                          .domain([min_y, max_y])
+                          .range([height, 0]);
+                      var x = d3.scaleTime()
+                          .domain([minDate, maxDate])
+                          .range([0, 625]);
+
+
+                      var xAxis = d3.axisBottom(x).tickFormat(d3.timeFormat('%Y'))
+                      var yAxis = d3.axisLeft(y);
+                      var colors = ["#a50026", "#4575b4"]
+                      ///////////// Lines and Axes ///////////////////////////////////////////////////////////////////////
+                      var label_coords = []
+                      plottedCountries.forEach(function (c, c_ind) {
+                          temp_d = data.filter(function (d) { return d.Country === c })
+
+                          var line = d3.line().x(function (d) { return x(parseDate(d.year)); })
+                              .y(function (d) { return y(d.value === null ? 0 : d.value); });
+
+                          label_coords.push(temp_d.filter(function (d) { return d.year === 2021 })[0].value)
+                          d3.select("body").select("#line_chart").select("#container").select("#lines")
+                              .append("path")
+                              .datum(temp_d)
+                              .attr("class", "line")
+                              .attr("id", c)
+                              .attr("d", line)
+                              .attr("transform", "translate(" + (margin.left + 5) + ",-25)")
+                              .attr("fill", "none")
+                              .attr("stroke", colors[c_ind])
+                      })
+                      ////////////////////
+                      d3.select("body").select("#line_chart")
+                          .select("#container").append("g")
+                          .attr("id", "x-axis").attr("class", "axis")
+                          .attr("transform", "translate(" + (margin.left + 5) + "," + (height - 25) + ")").call(xAxis);
+
+                      d3.select("body").select("#line_chart").select("#container")
+                          .append("g").attr("id", "y-axis")
+                          .attr("class", "axis")
+                          .attr("transform", "translate(" + (margin.left + 5) + ",-25)").call(yAxis);
+
+                      var x_axis_label = "Year"
+                      var y_axis_label = "Inflation Rate"
+
+                      d3.select("body").select("#line_chart").select("#container")
+                          .append("text")
+                          .attr("id", "x-axis-label")
+                          .attr("x", width / 2)
+                          .attr("y", height + 20)
+                          .attr("text-anchor", "middle")
+                          .attr("font-family", "sans-serif")
+                          .style("font-size", "18px")
+                          .text(x_axis_label)
+
+                      d3.select("body").select("#line_chart").select("#container")
+                          .append("text")
+                          .attr("font-family", "sans-serif")
+                          .style("font-size", "18px")
+                          .attr("id", "y-axis-label")
+                          .attr("x", -175)
+                          .attr("y",20)
+                          .attr("dy", "1.5em")
+                          .attr("font-size", "15")
+                          .attr("transform", "rotate(-90)")
+                          .text(y_axis_label)
+
+                      ////////////////////
+                      //////////////////// LEGEND ////////////////////////////////
+                      rad = 5
+                      d3.select("body").select("#line_chart").select("#container").append("g").attr("id", "legend")
+                      plottedCountries.forEach(function (c, i) {
+                          d3.select("#line_chart").select("#container").select("#legend")
+                              .append("circle")
+                              .attr("cx", width - margin.left - margin.right)
+                              .attr("cy", 50 + (i * rad * 4))
+                              .attr("r", rad)
+                              .attr("fill", colors[i])
+
+                          d3.select("body").select("#line_chart").select("#container").select("#legend")
+                              .append("text")
+                              .attr("font-family", "sans-serif")
+                              .style("font-size", "18px")
+                              .attr("x", width - margin.left - margin.right + (rad * 2))
+                              .attr("y", 50 + (i * rad * 4))
+                              .attr("dominant-baseline", "middle")
+                              .attr("font-size", "10px")
+                              .text(c)
+                      })
+
+                  }
+                  ////////////////////
+                  /////////////////
+                  ////////////////////
+
+
+                  var pathToCsv = "Data/Annual_Global_Inflation_Melted.csv";
+                  d3.dsv(",", pathToCsv, d3.autoType).then(function (data) {
+                      console.log(data)
+                      years = [];
+                      years_text = [];
+                      countries = [];
+                      data.forEach(function (d, i) { years_text.push(d.year); years.push(parseDate(d.year)); countries.push(d.Country); });
+                      distinctYears = [...new Set(years_text)].sort();
+                      distinctCountries = [...new Set(countries)].sort();
+                      d3.select("body").select("#YearDropdown").attr("name", "default").append("option").text("---").attr("value", 2021)
+
+
+                      distinctYears.forEach(function (c, i) {
+                          d3.select("body").select("#YearDropdown").attr("name", "year-list")
+                              .append("option")
+                              .text(c)
+                              .attr("value", c)
+                      })
+
+                      let mapsvg = d3.select("body")
+                          .append("svg")
+                          .attr("id", "map")
+                          .attr("width", width + margin.left + margin.right)
+                          .attr("height", height + margin.top + margin.bottom)
+                          .append("g")
+                          .attr("id", "countries")
+                          .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+                      d3.select("#map").append("g").attr("id", "legend")
+                          .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+                      let svg = d3.select("body")
+                          .append("svg")
+                          .attr("id", "line_chart")
+                          .attr("width", width + margin.left + margin.right)
+                          .attr("height", height + margin.top + margin.bottom)
+                          .append("g")
+                          .attr("id", "container")
+                          .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+                      plotter(['Canada', 'USA'], data)
+
+
+                      d3.json("Files/world_countries.json").then(
+                          (worldmap, error) => {
+                              if (error) { console.log(error) } else {
+
+                                  createMapAndLegend(worldmap, 2021, data)
+
+                                  d3.select("#YearDropdown")
+                                      .on("change", function () {
+
+                                          resp_text = this.options[this.selectedIndex].value
+                                          var year_selected = parseInt(resp_text)
+                                          createMapAndLegend(worldmap, year_selected, data)
+
+                                      })
+
+
+                              }
+                          })
+                  }
+                  )
+
+
+
+              </script>
+
+          </body>
+
+
+      <div class="clr"></div>
+    </div>
+  </div>
+
+
+</div>
+<!-- END PAGE SOURCE -->
+</body>
+</html>

@@ -1,0 +1,547 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Canadian Inflation</title>
+<meta name="description"Visulization 2">
+<meta name="keywords" content="CSE6242 Final Project - Team 77">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="style.css" rel="stylesheet" type="text/css" />
+
+</head>
+<body>
+<div id="fb-root"></div>
+
+<!-- START PAGE SOURCE -->
+<div class="main">
+  <div class="header">
+    <div class="header_resize">
+      <div class="logo">
+          <br>
+        <!-- <h1><a href="index.html"></a><img src="miami.jpg" alt="MiamiVice"/></h1> -->
+      </div>
+      <div class="clr"></div>
+
+      <ul id="qm0" class="qmmc">
+
+          <li><a class="qmparent" href="about.html">About</a></li>
+          <li><a class="qmparent" href="GlobalInflation.html"> Global Inflation</a></li>
+          <li><a class="qmparent" href="CanadianInflation.html"> Canadian Inflation</a></li>
+          <li><a class="qmparent" href="FoodInsecurity.html">Food Insecurity</a></li>
+
+          <li class="qmclear">&nbsp;</li>
+      </ul>
+
+
+
+      <div class="clr"></div>
+    </div>
+  </div>
+  <div class="content">
+      <div class="content_resize">
+          <div class="mainbar">
+              <div class="article">
+                  <h2> Exploration of Inflation in Canada </h2>
+                  <div class="clr"></div>
+                  <p class="infopost"></p>
+
+                  Use the visualization to take a deep dive into inflation in Canada over time.
+                  This visualization allows you to explore changes in the Consumer Pricing Index (CPI) for specific product groups.
+                  The CPI is a measure of inflation - the larger the CPI, the more that product group has experiences inflation. 
+                  In the visualisation below, the size of the node corresponds to the CPI.
+                  Products and product groups are organized into a hierarchy. Select a year and location from the drop down menu,
+                  click on a node to expand to the sub categories of that group. Double click to go back up a level. 
+                  Within a level, use the legend to select a different group. 
+                  Hover over a node to see the inflation of that product for the selected year,
+                  how that product/product group has changed from the selected year to today,
+                  and a prediction for that product group for the next year.
+
+              </div>
+              <div class="clr"></div>
+
+          </div>
+          <body>
+
+              <select id="RegionDropdown"style="position: absolute; top: 375px; left:45px">></select>
+              <select id="YearDropdown"style="position: absolute; top: 375px; left:350px">></select>
+
+
+              <script src="https://d3js.org/d3.v5.js"></script>
+              <script>
+                  var d3v5 = window.d3;
+                  window.d3 = null;
+              </script>
+              <script src="https://d3js.org/d3.v7.js"></script>
+
+              <script>
+
+                  var margin = { top: 25, right: 50, bottom: 25, left: 30 };
+                  var width = window.innerWidth - margin.left - margin.right; // Use the window's width
+                  var height = window.innerHeight - margin.top - margin.bottom-100; // Use the window's height
+                  var labelFontSize = "14px"
+                  var tooltipHeight = 120
+                  var parseDate = d3.timeParse("%Y")
+                  var cols = ["#4172f3", "#378bf9", "#2ca5f1", "#25c1dc",
+                      "#28d9c0", "#29e2c4", "#48f788", "#64fd6f", "#96fa50",
+                      "#bbf03f", "#dcdf33", "#feb927", "#ffa022", "#ff831d",
+                      "#da3d10", "#9b0f00", "#900c00", "#23171b"]
+                  var svg = d3.select("body").append("svg")
+                      .attr("width", width+100)
+                      .attr("height", height+100)
+                      .attr("id", "nodes_svg");
+
+                  svg.append("g")
+                      .attr("id", "container")
+                  svg.append("g").attr("id","level_title")
+
+                  ///////////////////////////////////////////////////////////////////////////////////
+                  /////////////////// Starting the data load ////////////////////////////////////////
+                  ///////////////////////////////////////////////////////////////////////////////////
+
+                  Promise.all([
+                      // enter code to read files
+                      //d3.csv('../../Data/edges.csv'),
+                      d3.csv('Data/CPI_with_predictions.csv')
+                  ]).then(
+                      d => ready(null, d[0])
+                  );
+
+
+                  function ready(error, CPI) {
+                      ///////////////////////////////////////////////////////////////////////////////////
+                      /////////////////// DATA COLLECT + FILLING THE DROPDOWN, DRAGGER //////////////////
+                      ///////////////////////////////////////////////////////////////////////////////////
+
+                      const range = (start, stop, step) => Array.from({ length: (stop - start) / step + 1 }, (_, i) => start + (i * step));
+                      var geo_var = [...new Set(CPI.map(function (d) {
+                          return d.GEO
+                      }))];
+                      geo_var.sort(d3.ascending)
+
+
+                      var date_var = [...new Set(CPI.map(function (d) {
+                          return parseInt(d.REF_DATE)
+                      }))];
+                      date_var.sort(d3.descending)
+
+                      //////////////////////////////////////////
+                      d3.select("#RegionDropdown").attr("name","region-list").attr("font-family", "sans-serif").style("font-size", "18px")
+                          .append("option").text("Canada").attr("value", "Canada")
+                          .attr("font-family", "sans-serif")
+                          .style("font-size", "18px")
+                      geo_var.forEach(function (c, i) {
+                        if(c != "Canada"){  
+                        d3.select("#RegionDropdown")
+                              .append("option")
+                              .text(c)
+                              .attr("value", c)
+                              .attr("font-family", "sans-serif")
+                              .style("font-size", "18px")
+                        }
+                      })
+
+                      d3.select("#YearDropdown").attr("name", "year-list").attr("font-family", "sans-serif").style("font-size", "18px")
+                          .append("option").text("2021").attr("value", 2021).attr("font-family", "sans-serif").style("font-size", "18px")
+                      date_var.forEach(function (c, i) {
+                        if(c != 2021){  
+                        d3.select("#YearDropdown")
+                              .append("option")
+                              .text(c).attr("font-family", "sans-serif")
+                              .style("font-size", "18px")
+                              .attr("value", c)
+                        }
+                      })
+                      ///////////////////////////////////////////////////////////////////////////////////
+                      ////////////////////// Filtering with dropdowns ///////////////////////////////////
+                      ///////////////////////////////////////////////////////////////////////////////////
+                      var size_range = range(5, 50, 5)
+                      var CPI_var = [...new Set(CPI.map(function (d) {
+                          return parseFloat(d.CPI)
+                      }))];
+                      var quantile = d3.scaleQuantile().domain(CPI_var).range(size_range)
+
+
+
+                      ///////////////////////////////////////////////////////////////////////////////////
+                      ////////////////////// Filtering with dropdowns ///////////////////////////////////
+                      ///////////////////////////////////////////////////////////////////////////////////
+                      var region_selected = "Canada"
+                      var year_selected = 2021
+
+                      MainPlotter(filterData(year_selected, region_selected, CPI))
+
+                      d3.select("#RegionDropdown")
+                          .on("change", function () {
+                              resp_text = this.options[this.selectedIndex].value
+                              region_selected = resp_text
+                              filtered = filterData(year_selected, region_selected, CPI)
+                              MainPlotter(filtered)
+                          })
+
+
+                      d3.select("#YearDropdown")
+                          .on("change", function () {
+                              resp_text = this.options[this.selectedIndex].value
+                              year_selected = parseInt(resp_text)
+                              filtered = filterData(year_selected, region_selected, CPI)
+                              MainPlotter(filtered)
+                          })
+                      ///////////////////////////////////////////////////////////////////////////////////
+                      /////////////////// TOOLTIP ///////////////////////////////////////////////////////
+                      ///////////////////////////////////////////////////////////////////////////////////
+
+                      var div = d3.select("body").append("div")
+                          .attr("class", "tooltip")
+                          .style("opacity", 0)
+                          .style("width", "" + width + "px")
+                          .style("height", "" + tooltipHeight + "px")
+
+                      ///////////////////////////////////////////////////////////////////////////////////
+                      ////////////////////// PLOTTING FUNCTIONS USED ABOVE //////////////////////////////
+                      ///////////////////////////////////////////////////////////////////////////////////
+                      function filterData(yr, reg, data) {
+                          filtered_data = data.filter(function (d) { return parseInt(d.REF_DATE.substring(0, 4)) === yr })
+                          filtered_data = filtered_data.filter(function (d) { return d.GEO === reg })
+                          return filtered_data
+                      }
+
+                      function MainPlotter(data) {
+                          lvl = 2
+                          dta = data
+                          plotter(dta, lvl)
+                          d3.select("#container").selectAll("circle")
+                              .on("click", clickBreakdown)
+
+
+
+
+
+                          d3.select("body").on("dblclick", function () {
+                              if (lvl > 2) {
+                                  lvl = lvl - 1
+                                  plotter(dta, lvl)
+                              }
+                          });
+                      }
+
+
+                      function update_legend(parent_name) {
+                          node_list = []
+
+                          d3.select("#container").select("#circle_group").selectAll("circle")
+                              .style("fill", function (d, i) {
+                                  if (d.parent === parent_name) {
+                                      return cols[i]
+                                  }
+                                  else {
+                                      return "gray"
+                                  }
+                              })
+
+                      }
+
+
+                      function clickBreakdown() {
+                          current_color = d3.select(this).style("fill")
+                          class_needed = d3.select(this).attr("class")
+                          parent_needed = d3.select(this).attr("value")
+
+                          if (current_color === 'gray') { plotter(dta, lvl, selectedParent = parent_needed, replot = "No") }
+                          else {
+                              if (lvl < 4) {
+
+                                  lvl = lvl + 1
+                                  plotter(dta, lvl, selectedParent = class_needed)
+                              }
+                          }
+                      }
+
+
+                      function legendClicker() {
+                          color_square = d3.select(this).attr("fill")
+                          parent_class = d3.select(this).attr("class")
+                          if (1 === 1) {
+                              //update_legend
+                              plotter(dta, lvl, selectedParent = parent_class, replot = "No")
+                          }
+                      }
+
+
+                      //  grouped by Year
+                      const groupedValues = function (data) {
+                          let metrics = d3.nest()
+                              .key(function (col) { return col.year; })
+                              .sortKeys(d3.descending)
+                              .rollup(function (dv) {
+                                  return {
+                                      metircs: lst_keys.map(column => {
+                                          return {
+                                              column,
+                                              rows: data.length,
+                                              min: d3.min(dv, (fn) => { return +fn[column] }),
+                                              max: d3.max(dv, (fn) => { return +fn[column] }),
+                                              avg: d3.mean(dv, (fn) => { return +fn[column] }),
+                                              median: d3.median(dv, (fn) => { return +fn[column] }),
+                                              std: d3.deviation(dv, (fn) => { return +fn[column] }),
+                                              total: d3.sum(dv, (fn) => { return +fn[column] }),
+                                              // cumsum: d3.cumsum(dv, (fn) => {return +fn[column] })
+                                          };
+                                      })
+                                  };
+                              }).entries(data)
+                          return metrics;
+                      }
+
+
+
+                      function plotter(data, level, selectedParent = "None", replot = "Yes") {
+                          var input_level = level
+                          if (input_level === 2) {
+                              agg_data = d3v5.nest().key(function (d) { return d.Level1; })
+                                  .key(function (d) { return d.Level2; })
+                                  .rollup(function(d){
+                                    return {
+                                        CPI: d3.sum(d, function (g) { return g.CPI * g["lvl4 BW"]; }) / d3.sum(d, function (g) { return g["lvl4 BW"] }),
+                                        preds: d3.sum(d, function (g) { return g["lvl4 pred"] * g["lvl4 BW"]; }) / d3.sum(d, function (g) { return g["lvl4 BW"] }),
+                                        percent_change: d3.max(d,function(g){ return g["increase_to_most_recent_val"]})
+                                    }
+                                  })
+                                  .entries(data);
+                          }
+                          else {
+                              if (input_level === 3) {
+                                  agg_data = d3v5.nest().key(function (d) { return d.Level2; })
+                                      .key(function (d) { return d.Level3; })
+                                      .rollup(function(d){
+                                            return {
+                                                CPI: d3.sum(d, function (g) { return g.CPI * g["lvl4 BW"]; }) / d3.sum(d, function (g) { return g["lvl4 BW"] }),
+                                                preds: d3.sum(d, function (g) { return g["lvl4 pred"] * g["lvl4 BW"]; }) / d3.sum(d, function (g) { return g["lvl4 BW"] }),
+                                                percent_change: d3.max(d,function(g){ return g["increase_to_most_recent_val"]})
+                                            }
+                                        })
+                                      .entries(data);
+                              }
+                              else {
+                                  if (input_level === 4) {
+                                      agg_data = d3v5.nest().key(function (d) { return d.Level3; })
+                                          .key(function (d) { return d.Level4; })
+                                          .rollup(function(d){
+                                                return {
+                                                    CPI: d3.sum(d, function (g) { return g.CPI * g["lvl4 BW"]; }) / d3.sum(d, function (g) { return g["lvl4 BW"] }),
+                                                    preds: d3.sum(d, function (g) { return g["lvl4 pred"] * g["lvl4 BW"]; }) / d3.sum(d, function (g) { return g["lvl4 BW"] }),
+                                                    percent_change: d3.max(d,function(g){ return g["increase_to_most_recent_val"]})
+                                                }
+                                            })
+                                          .entries(data);
+                                  }
+                              }
+                          }
+                          var flatData = []
+                          agg_data.forEach(function(parent_dtpt,ind){
+                            parent = parent_dtpt.key
+                            parent_dtpt.values.forEach(function(d,i){
+                                flatData.push({
+                                            parent:parent,
+                                            node:d.key,
+                                            CPI:d.value.CPI,
+                                            preds:parseFloat(d.value.preds),
+                                            percent_change:parseFloat(d.value.percent_change)
+                                        })
+                                })
+                            })
+
+                          var parentSet = [...new Set(flatData.map(function (d) {
+                              return d.parent
+                          }))];
+                          parentSet.sort(d3.ascending)
+                          
+                          d3.select("#level_title").remove()
+                          svg.append("g").attr("id","level_title")
+                              .append("text").attr("x",width-margin.right-50).attr("y",margin.top/2)
+                              .text("Level " + input_level +"").attr("font-size","14px")
+
+                          var x = d3.scaleOrdinal()
+                              .domain(parentSet)
+                              .range(range(0, width/1.2, (width / parentSet.length) / 4))
+
+                          var y = d3.scaleOrdinal()
+                              .domain(parentSet)
+                              .range(range(0, height/4, (height / parentSet.length) / 4))
+
+                          // A color scale
+
+                          var color = d3.scaleOrdinal()
+                              .domain(parentSet)
+                              .range(cols)
+
+                          if (replot === "Yes") {
+                              // Initialize the circle: all located at the center of the svg area
+                              var container = svg.append("g").attr("id", "container")
+                              var legend = container.append("g").attr("id", "legend")
+                              legend.append("g").attr("id", "legend_text")
+                              legend.append("g").attr("id", "legend_squares")
+                              d3.select("#container").remove()
+                              parentSet.forEach(function (d, i) {
+                                  w = 10
+                                  h = 10
+                                  legend.select("#legend_text").append("text").attr("font-family", "sans-serif")
+                                      .style("font-size", labelFontSize)
+                                      .attr("x", width - 225 + w + w )
+                                      .attr("y", (i * 15) + margin.top + (h / 2) + 2)
+                                      .attr("font-size", labelFontSize)
+                                      .attr("dominant-baseline", "middle")
+                                      .text(d)
+                                  d3.select("#legend_squares")
+                                      .append("rect")
+                                      .attr("class", d)
+                                      .attr("x", width -225)
+                                      .attr("y", (i * 15) + margin.top)
+                                      .attr("width", w)
+                                      .attr("height", h)
+                                      .attr("fill", function () {
+                                          if (selectedParent !== "None") {
+                                              if (d === selectedParent) {
+                                                  return cols[i]
+                                              }
+                                              else {
+                                                  return "gray"
+                                              }
+                                          } else { return cols[i] }
+                                      })
+                                      .on("click", legendClicker)
+                              })
+
+
+                              var node = container.append("g").attr("id", "circle_group")
+                                  .selectAll("circle")
+                                  .data(flatData)
+                                  .enter()
+                                  .append("circle")
+                                  .attr("class", function (d) { return d.node })
+                                  .attr("r", function (d) { return quantile(d.CPI) })
+                                  .attr("cx", width / 2)
+                                  .attr("cy", height / 2 )
+                                  .attr("value", function (d) { return d.parent })
+                                  .style("fill", function (d) {
+                                      if (selectedParent !== "None") {
+                                          if (d.parent === selectedParent) {
+                                              return color(d.parent)
+                                          }
+                                          else {
+                                              return "gray"
+                                          }
+                                      } else { return color(d.parent) }
+                                  })
+                                  .style("fill-opacity", 0.8)
+                                  .attr("stroke", "black")
+                                  .style("stroke-width", 1)
+                                  .on("click", clickBreakdown)
+                                  .on("mouseover", function (event, d) {
+                                     d3.select(this).style("fill-opacity", 0.4);
+                                      div.transition()
+                                          .duration(200)
+                                          .style("opacity", .9);
+                                      div.html("" + d.node + " in " + region_selected + " during " + year_selected + "</br>" + "CPI: " + Math.round(d.CPI*100)/100 + "</br>" + "Percent increase between " + year_selected + " and 2021: " + Math.round(d.percent_change*100)/100 + "%" + "</br>" + "Predicted CPI for next year: " + Math.round(d.preds*100)/100 + "" )    
+                                          .style("left", (margin.left) + "px")
+                                          .style("top", height*1.5 - tooltipHeight + "px");
+                                  })
+                                  .on("mouseout", function (d) {
+                                      d3.select(this).transition().duration(100).style("fill-opacity", 0.8)
+                                      div.transition()
+                                          .duration(200)
+                                          .style("opacity", 0);
+                                  })
+
+
+                              var text = container.append("g").attr("id", "node_text")
+                                  .selectAll("text")
+                                  .data(flatData)
+                                  .enter()
+                                  .append("text")
+                                  .attr("font-family", "sans-serif")
+                                  .attr("class", function (d) { return d.node })
+                                  .attr("value", function (d) { return d.parent })
+                                  .attr("x", function (d) { return d.x })
+                                  .attr("y", function (d) { return d.y })
+                                  .style("font-size", function (d) {
+                                      if (selectedParent !== "None") {
+                                          if (d.parent === selectedParent) {
+                                              return labelFontSize
+                                          }
+                                          else {
+                                              return "0px"
+                                          }
+                                      } else { return labelFontSize }
+                                  })
+                                  .text(function (d) { return d.node })
+                              text.exit().remove()
+
+
+
+                              // Features of the forces applied to the nodes:
+                              var simulation = d3.forceSimulation()
+                                  .force("x", d3.forceX().strength(0.5).x(function (d) { return x(d.parent) }))
+                                  .force("y", d3.forceY().strength(0.1).y(function (d) { return y(d.parent) }))
+                                  .force("center", d3.forceCenter().x(width / 2).y(height / 2)) // Attraction to the center of the svg area
+                                  .force("charge", d3.forceManyBody().strength(1)) // Nodes are attracted one each other of value is > 0
+                                  .force("collide", d3.forceCollide().strength(.1).radius((function (d) { return quantile(d.CPI * 2) })).iterations(1)) // Force that avoids circle overlapping
+
+
+                              simulation
+                                  .nodes(flatData)
+                                  .on("tick", function (d) {
+                                      node
+                                          .attr("cx", function (d) { return d.x - 100; })
+                                          .attr("cy", function (d) { return d.y + 80; });
+                                      text.attr("transform", function (d) { return "translate(" + (d.x + quantile(d.CPI) / 3 - 100) + "," + (d.y - quantile(d.CPI) / 6 + 80) + ")"; });
+                                  });
+                          } // End of Replot
+                          else {
+                              d3.select("#container").select("#circle_group").selectAll("circle")
+                                  .style("fill", function (d, i) {
+                                      if (d.parent === selectedParent) {
+                                          return color(d.parent)
+                                      }
+                                      else {
+                                          return "gray"
+                                      }
+                                  }
+                                  )
+                              d3.select("#container").select("#node_text").selectAll("text")
+                                  .style("font-size", function (d) {
+                                      if (d.parent === selectedParent) { return labelFontSize }
+                                      else { return "0px" }
+                                  })
+
+                              d3.select("#container").select("#legend").select("#legend_squares").selectAll("rect")
+                                  .attr("fill", function () {
+                                      c = d3.select(this).attr("class")
+                                      if (c === selectedParent) { return color(c) }
+                                      else { return "gray" }
+                                  })
+
+
+                          }  // End of ELSE for Replot
+
+
+                      } // end of PLOTTER FUNCTION
+
+
+
+                  } // End of Data .then()
+
+
+
+
+
+              </script>
+          </body>
+
+          <div class="clr"></div>
+      </div>
+  </div>
+
+
+</div>
+<!-- END PAGE SOURCE -->
+</body>
+</html>

@@ -1,0 +1,305 @@
+Level,Level1,Level2,Level3,Level4,Level5,Level6,Products and product groups
+1,All-items,,,,,,All-items
+2,All-items,Food,,,,,Food
+3,All-items,Food,Food purchased from stores,,,,Food purchased from stores
+4,All-items,Food,Food purchased from stores,Meat,,,Meat
+5,All-items,Food,Food purchased from stores,Meat,Fresh or frozen meat (excluding poultry),,Fresh or frozen meat (excluding poultry)
+6,All-items,Food,Food purchased from stores,Meat,Fresh or frozen meat (excluding poultry),Fresh or frozen beef,Fresh or frozen beef
+6,All-items,Food,Food purchased from stores,Meat,Fresh or frozen meat (excluding poultry),Fresh or frozen pork,Fresh or frozen pork
+6,All-items,Food,Food purchased from stores,Meat,Fresh or frozen meat (excluding poultry),Other fresh or frozen meat (excluding poultry),Other fresh or frozen meat (excluding poultry)
+5,All-items,Food,Food purchased from stores,Meat,Fresh or frozen poultry,,Fresh or frozen poultry
+6,All-items,Food,Food purchased from stores,Meat,Fresh or frozen poultry,Fresh or frozen chicken,Fresh or frozen chicken
+6,All-items,Food,Food purchased from stores,Meat,Fresh or frozen poultry,Other fresh or frozen poultry,Other fresh or frozen poultry
+5,All-items,Food,Food purchased from stores,Meat,Processed meat,,Processed meat
+6,All-items,Food,Food purchased from stores,Meat,Processed meat,Ham and bacon,Ham and bacon
+6,All-items,Food,Food purchased from stores,Meat,Processed meat,Other processed meat,Other processed meat
+6,All-items,Food,Food purchased from stores,Meat,Processed meat,Bacon (2013=100),Bacon (2013=100)
+6,All-items,Food,Food purchased from stores,Meat,Processed meat,Ham excluding deli ham (2013=100),Ham excluding deli ham (2013=100)
+4,All-items,Food,Food purchased from stores,"Fish, seafood and other marine products",,,"Fish, seafood and other marine products"
+5,All-items,Food,Food purchased from stores,"Fish, seafood and other marine products",Fish,,Fish
+6,All-items,Food,Food purchased from stores,"Fish, seafood and other marine products",Fish,Fresh or frozen fish (including portions and fish sticks),Fresh or frozen fish (including portions and fish sticks)
+6,All-items,Food,Food purchased from stores,"Fish, seafood and other marine products",Fish,Canned and other preserved fish,Canned and other preserved fish
+6,All-items,Food,Food purchased from stores,"Fish, seafood and other marine products",Fish,Canned salmon (2013=100),Canned salmon (2013=100)
+6,All-items,Food,Food purchased from stores,"Fish, seafood and other marine products",Fish,Canned tuna (2013=100),Canned tuna (2013=100)
+5,All-items,Food,Food purchased from stores,"Fish, seafood and other marine products",Seafood and other marine products,,Seafood and other marine products
+6,All-items,Food,Food purchased from stores,"Fish, seafood and other marine products",Seafood and other marine products,Shrimps and prawns (2013=100),Shrimps and prawns (2013=100)
+6,All-items,Food,Food purchased from stores,"Fish, seafood and other marine products",Seafood and other marine products,Other shellfish (2013=100),Other shellfish (2013=100)
+4,All-items,Food,Food purchased from stores,Dairy products and eggs,,,Dairy products and eggs
+5,All-items,Food,Food purchased from stores,Dairy products and eggs,Dairy products,,Dairy products
+6,All-items,Food,Food purchased from stores,Dairy products and eggs,Dairy products,Whole milk (2013=100),Whole milk (2013=100)
+6,All-items,Food,Food purchased from stores,Dairy products and eggs,Dairy products,Low-fat milk (2013=100),Low-fat milk (2013=100)
+6,All-items,Food,Food purchased from stores,Dairy products and eggs,Dairy products,Fresh milk,Fresh milk
+6,All-items,Food,Food purchased from stores,Dairy products and eggs,Dairy products,Butter,Butter
+6,All-items,Food,Food purchased from stores,Dairy products and eggs,Dairy products,Cheese,Cheese
+6,All-items,Food,Food purchased from stores,Dairy products and eggs,Dairy products,Cheddar cheese (2013=100),Cheddar cheese (2013=100)
+6,All-items,Food,Food purchased from stores,Dairy products and eggs,Dairy products,Processed cheese (2013=100),Processed cheese (2013=100)
+6,All-items,Food,Food purchased from stores,Dairy products and eggs,Dairy products,Unripened or fresh cheese (2013=100),Unripened or fresh cheese (2013=100)
+6,All-items,Food,Food purchased from stores,Dairy products and eggs,Dairy products,Mozzarella cheese (2013=100),Mozzarella cheese (2013=100)
+6,All-items,Food,Food purchased from stores,Dairy products and eggs,Dairy products,Ice cream and related products,Ice cream and related products
+6,All-items,Food,Food purchased from stores,Dairy products and eggs,Dairy products,Other dairy products,Other dairy products
+5,All-items,Food,Food purchased from stores,Dairy products and eggs,Eggs,,Eggs
+4,All-items,Food,Food purchased from stores,Bakery and cereal products (excluding baby food),,,Bakery and cereal products (excluding baby food)
+5,All-items,Food,Food purchased from stores,Bakery and cereal products (excluding baby food),Bakery products,,Bakery products
+6,All-items,Food,Food purchased from stores,Bakery and cereal products (excluding baby food),Bakery products,"Bread, rolls and buns","Bread, rolls and buns"
+6,All-items,Food,Food purchased from stores,Bakery and cereal products (excluding baby food),Bakery products,Cookies and crackers,Cookies and crackers
+6,All-items,Food,Food purchased from stores,Bakery and cereal products (excluding baby food),Bakery products,Crackers and crisp breads (2013=100),Crackers and crisp breads (2013=100)
+6,All-items,Food,Food purchased from stores,Bakery and cereal products (excluding baby food),Bakery products,Cookies and sweet biscuits (2013=100),Cookies and sweet biscuits (2013=100)
+6,All-items,Food,Food purchased from stores,Bakery and cereal products (excluding baby food),Bakery products,Other bakery products,Other bakery products
+5,All-items,Food,Food purchased from stores,Bakery and cereal products (excluding baby food),Cereal products (excluding baby food),,Cereal products (excluding baby food)
+6,All-items,Food,Food purchased from stores,Bakery and cereal products (excluding baby food),Cereal products (excluding baby food),Rice and rice-based mixes,Rice and rice-based mixes
+6,All-items,Food,Food purchased from stores,Bakery and cereal products (excluding baby food),Cereal products (excluding baby food),Breakfast cereal and other cereal products (excluding baby food),Breakfast cereal and other cereal products (excluding baby food)
+6,All-items,Food,Food purchased from stores,Bakery and cereal products (excluding baby food),Cereal products (excluding baby food),Pasta products,Pasta products
+6,All-items,Food,Food purchased from stores,Bakery and cereal products (excluding baby food),Cereal products (excluding baby food),Dry or fresh pasta (2013=100),Dry or fresh pasta (2013=100)
+6,All-items,Food,Food purchased from stores,Bakery and cereal products (excluding baby food),Cereal products (excluding baby food),Pasta mixes (2013=100),Pasta mixes (2013=100)
+6,All-items,Food,Food purchased from stores,Bakery and cereal products (excluding baby food),Cereal products (excluding baby food),Flour and flour-based mixes,Flour and flour-based mixes
+4,All-items,Food,Food purchased from stores,"Fruit, fruit preparations and nuts",,,"Fruit, fruit preparations and nuts"
+5,All-items,Food,Food purchased from stores,"Fruit, fruit preparations and nuts",Fresh fruit,,Fresh fruit
+6,All-items,Food,Food purchased from stores,"Fruit, fruit preparations and nuts",Fresh fruit,Apples,Apples
+6,All-items,Food,Food purchased from stores,"Fruit, fruit preparations and nuts",Fresh fruit,Oranges,Oranges
+6,All-items,Food,Food purchased from stores,"Fruit, fruit preparations and nuts",Fresh fruit,Bananas,Bananas
+6,All-items,Food,Food purchased from stores,"Fruit, fruit preparations and nuts",Fresh fruit,Other fresh fruit,Other fresh fruit
+5,All-items,Food,Food purchased from stores,"Fruit, fruit preparations and nuts",Preserved fruit and fruit preparations,,Preserved fruit and fruit preparations
+6,All-items,Food,Food purchased from stores,"Fruit, fruit preparations and nuts",Preserved fruit and fruit preparations,Fruit juices,Fruit juices
+6,All-items,Food,Food purchased from stores,"Fruit, fruit preparations and nuts",Preserved fruit and fruit preparations,Other preserved fruit and fruit preparations,Other preserved fruit and fruit preparations
+6,All-items,Food,Food purchased from stores,"Fruit, fruit preparations and nuts",Preserved fruit and fruit preparations,"Jam, jelly and other preserves (2013=100)","Jam, jelly and other preserves (2013=100)"
+6,All-items,Food,Food purchased from stores,"Fruit, fruit preparations and nuts",Preserved fruit and fruit preparations,Canned fruit (2013=100),Canned fruit (2013=100)
+6,All-items,Food,Food purchased from stores,"Fruit, fruit preparations and nuts",Preserved fruit and fruit preparations,Dried and dehydrated fruit (2013=100),Dried and dehydrated fruit (2013=100)
+6,All-items,Food,Food purchased from stores,"Fruit, fruit preparations and nuts",Preserved fruit and fruit preparations,Frozen fruit (2013=100),Frozen fruit (2013=100)
+5,All-items,Food,Food purchased from stores,"Fruit, fruit preparations and nuts",Nuts and seeds,,Nuts and seeds
+6,All-items,Food,Food purchased from stores,"Fruit, fruit preparations and nuts",Nuts and seeds,Nut butter (2013=100),Nut butter (2013=100)
+4,All-items,Food,Food purchased from stores,Vegetables and vegetable preparations,,,Vegetables and vegetable preparations
+5,All-items,Food,Food purchased from stores,Vegetables and vegetable preparations,Fresh vegetables,,Fresh vegetables
+6,All-items,Food,Food purchased from stores,Vegetables and vegetable preparations,Fresh vegetables,Potatoes,Potatoes
+6,All-items,Food,Food purchased from stores,Vegetables and vegetable preparations,Fresh vegetables,Tomatoes,Tomatoes
+6,All-items,Food,Food purchased from stores,Vegetables and vegetable preparations,Fresh vegetables,Lettuce,Lettuce
+6,All-items,Food,Food purchased from stores,Vegetables and vegetable preparations,Fresh vegetables,Other fresh vegetables,Other fresh vegetables
+5,All-items,Food,Food purchased from stores,Vegetables and vegetable preparations,Preserved vegetables and vegetable preparations,,Preserved vegetables and vegetable preparations
+6,All-items,Food,Food purchased from stores,Vegetables and vegetable preparations,Preserved vegetables and vegetable preparations,Frozen and dried vegetables,Frozen and dried vegetables
+6,All-items,Food,Food purchased from stores,Vegetables and vegetable preparations,Preserved vegetables and vegetable preparations,Canned vegetables and other vegetable preparations,Canned vegetables and other vegetable preparations
+6,All-items,Food,Food purchased from stores,Vegetables and vegetable preparations,Preserved vegetables and vegetable preparations,Fermented or pickled vegetables (2013=100),Fermented or pickled vegetables (2013=100)
+4,All-items,Food,Food purchased from stores,Other food products and non-alcoholic beverages,,,Other food products and non-alcoholic beverages
+5,All-items,Food,Food purchased from stores,Other food products and non-alcoholic beverages,Sugar and confectionery,,Sugar and confectionery
+6,All-items,Food,Food purchased from stores,Other food products and non-alcoholic beverages,Sugar and confectionery,Sugar and syrup,Sugar and syrup
+6,All-items,Food,Food purchased from stores,Other food products and non-alcoholic beverages,Sugar and confectionery,Confectionery,Confectionery
+5,All-items,Food,Food purchased from stores,Other food products and non-alcoholic beverages,Edible fats and oils,,Edible fats and oils
+6,All-items,Food,Food purchased from stores,Other food products and non-alcoholic beverages,Edible fats and oils,Margarine,Margarine
+6,All-items,Food,Food purchased from stores,Other food products and non-alcoholic beverages,Edible fats and oils,Other edible fats and oils,Other edible fats and oils
+5,All-items,Food,Food purchased from stores,Other food products and non-alcoholic beverages,Coffee and tea,,Coffee and tea
+6,All-items,Food,Food purchased from stores,Other food products and non-alcoholic beverages,Coffee and tea,Coffee,Coffee
+6,All-items,Food,Food purchased from stores,Other food products and non-alcoholic beverages,Coffee and tea,Tea,Tea
+6,All-items,Food,Food purchased from stores,Other food products and non-alcoholic beverages,Coffee and tea,Roasted or ground coffee (2013=100),Roasted or ground coffee (2013=100)
+6,All-items,Food,Food purchased from stores,Other food products and non-alcoholic beverages,Coffee and tea,Instant and other coffee (2013=100),Instant and other coffee (2013=100)
+5,All-items,Food,Food purchased from stores,Other food products and non-alcoholic beverages,"Condiments, spices and vinegars",,"Condiments, spices and vinegars"
+6,All-items,Food,Food purchased from stores,Other food products and non-alcoholic beverages,"Condiments, spices and vinegars","Sauces, condiments and dips (2013=100)","Sauces, condiments and dips (2013=100)"
+6,All-items,Food,Food purchased from stores,Other food products and non-alcoholic beverages,"Condiments, spices and vinegars","Herbs, spices and seasonings (2013=100)","Herbs, spices and seasonings (2013=100)"
+5,All-items,Food,Food purchased from stores,Other food products and non-alcoholic beverages,Other food preparations,,Other food preparations
+6,All-items,Food,Food purchased from stores,Other food products and non-alcoholic beverages,Other food preparations,Canned infant or junior foods (2013=100),Canned infant or junior foods (2013=100)
+6,All-items,Food,Food purchased from stores,Other food products and non-alcoholic beverages,Other food preparations,Infant formula (2013=100),Infant formula (2013=100)
+6,All-items,Food,Food purchased from stores,Other food products and non-alcoholic beverages,Other food preparations,Soup,Soup
+6,All-items,Food,Food purchased from stores,Other food products and non-alcoholic beverages,Other food preparations,Baby foods,Baby foods
+6,All-items,Food,Food purchased from stores,Other food products and non-alcoholic beverages,Other food preparations,Frozen food preparations,Frozen food preparations
+6,All-items,Food,Food purchased from stores,Other food products and non-alcoholic beverages,Other food preparations,All other food preparations,All other food preparations
+6,All-items,Food,Food purchased from stores,Other food products and non-alcoholic beverages,Other food preparations,Potato chips and other snack products n.e.c. (2013=100),Potato chips and other snack products n.e.c. (2013=100)
+6,All-items,Food,Food purchased from stores,Other food products and non-alcoholic beverages,Other food preparations,All other miscellaneous food preparations (2013=100),All other miscellaneous food preparations (2013=100)
+5,All-items,Food,Food purchased from stores,Other food products and non-alcoholic beverages,Non-alcoholic beverages,,Non-alcoholic beverages
+3,All-items,Food,Food purchased from restaurants,,,,Food purchased from restaurants
+4,All-items,Food,Food purchased from restaurants,Food purchased from table-service restaurants,,,Food purchased from table-service restaurants
+4,All-items,Food,Food purchased from restaurants,Food purchased from fast food and take-out restaurants,,,Food purchased from fast food and take-out restaurants
+4,All-items,Food,Food purchased from restaurants,Food purchased from cafeterias and other restaurants,,,Food purchased from cafeterias and other restaurants
+2,All-items,Shelter,,,,,Shelter
+3,All-items,Shelter,Rented accommodation,,,,Rented accommodation
+4,All-items,Shelter,Rented accommodation,Rent,,,Rent
+4,All-items,Shelter,Rented accommodation,Tenants' insurance premiums,,,Tenants' insurance premiums
+4,All-items,Shelter,Rented accommodation,"Tenants' maintenance, repairs and other expenses",,,"Tenants' maintenance, repairs and other expenses"
+3,All-items,Shelter,Owned accommodation,,,,Owned accommodation
+4,All-items,Shelter,Owned accommodation,Mortgage interest cost,,,Mortgage interest cost
+4,All-items,Shelter,Owned accommodation,Homeowners' replacement cost,,,Homeowners' replacement cost
+4,All-items,Shelter,Owned accommodation,Property taxes and other special charges,,,Property taxes and other special charges
+4,All-items,Shelter,Owned accommodation,Homeowners' home and mortgage insurance,,,Homeowners' home and mortgage insurance
+4,All-items,Shelter,Owned accommodation,Homeowners' maintenance and repairs,,,Homeowners' maintenance and repairs
+4,All-items,Shelter,Owned accommodation,Other owned accommodation expenses,,,Other owned accommodation expenses
+3,All-items,Shelter,"Water, fuel and electricity",,,,"Water, fuel and electricity"
+4,All-items,Shelter,"Water, fuel and electricity",Electricity,,,Electricity
+4,All-items,Shelter,"Water, fuel and electricity",Water,,,Water
+4,All-items,Shelter,"Water, fuel and electricity",Natural gas,,,Natural gas
+4,All-items,Shelter,"Water, fuel and electricity",Fuel oil and other fuels,,,Fuel oil and other fuels
+2,All-items,"Household operations, furnishings and equipment",,,,,"Household operations, furnishings and equipment"
+3,All-items,"Household operations, furnishings and equipment",Household operations,,,,Household operations
+4,All-items,"Household operations, furnishings and equipment",Household operations,Communications,,,Communications
+5,All-items,"Household operations, furnishings and equipment",Household operations,Communications,Telephone services,,Telephone services
+6,All-items,"Household operations, furnishings and equipment",Household operations,Communications,Telephone services,Cellular services (2017=100),Cellular services (2017=100)
+5,All-items,"Household operations, furnishings and equipment",Household operations,Communications,Postal and other communications services,,Postal and other communications services
+5,All-items,"Household operations, furnishings and equipment",Household operations,Communications,Internet access services (200212=100),,Internet access services (200212=100)
+5,All-items,"Household operations, furnishings and equipment",Household operations,Communications,Telephone equipment (201104=100),,Telephone equipment (201104=100)
+4,All-items,"Household operations, furnishings and equipment",Household operations,Child care and housekeeping services,,,Child care and housekeeping services
+5,All-items,"Household operations, furnishings and equipment",Household operations,Child care and housekeeping services,Child care services,,Child care services
+5,All-items,"Household operations, furnishings and equipment",Household operations,Child care and housekeeping services,Housekeeping services,,Housekeeping services
+4,All-items,"Household operations, furnishings and equipment",Household operations,Household cleaning products,,,Household cleaning products
+5,All-items,"Household operations, furnishings and equipment",Household operations,Household cleaning products,Detergents and soaps (other than personal care),,Detergents and soaps (other than personal care)
+5,All-items,"Household operations, furnishings and equipment",Household operations,Household cleaning products,Other household cleaning products,,Other household cleaning products
+5,All-items,"Household operations, furnishings and equipment",Household operations,Household cleaning products,Laundry detergents and soaps (2013=100),,Laundry detergents and soaps (2013=100)
+5,All-items,"Household operations, furnishings and equipment",Household operations,Household cleaning products,Detergents and rinse agents for dish washing (2013=100),,Detergents and rinse agents for dish washing (2013=100)
+5,All-items,"Household operations, furnishings and equipment",Household operations,Household cleaning products,Household cleaning and polishing products (2013=100),,Household cleaning and polishing products (2013=100)
+5,All-items,"Household operations, furnishings and equipment",Household operations,Household cleaning products,Bleach and other household chemical products (2013=100),,Bleach and other household chemical products (2013=100)
+5,All-items,"Household operations, furnishings and equipment",Household operations,Household cleaning products,Fabric softener (2013=100),,Fabric softener (2013=100)
+4,All-items,"Household operations, furnishings and equipment",Household operations,"Paper, plastic and aluminum foil supplies",,,"Paper, plastic and aluminum foil supplies"
+5,All-items,"Household operations, furnishings and equipment",Household operations,"Paper, plastic and aluminum foil supplies",Paper supplies,,Paper supplies
+5,All-items,"Household operations, furnishings and equipment",Household operations,"Paper, plastic and aluminum foil supplies",Household paper supplies (2013=100),,Household paper supplies (2013=100)
+5,All-items,"Household operations, furnishings and equipment",Household operations,"Paper, plastic and aluminum foil supplies",Stationery (2013=100),,Stationery (2013=100)
+5,All-items,"Household operations, furnishings and equipment",Household operations,"Paper, plastic and aluminum foil supplies",Plastic and aluminum foil supplies,,Plastic and aluminum foil supplies
+5,All-items,"Household operations, furnishings and equipment",Household operations,"Paper, plastic and aluminum foil supplies",Plastic supplies (2013=100),,Plastic supplies (2013=100)
+5,All-items,"Household operations, furnishings and equipment",Household operations,"Paper, plastic and aluminum foil supplies",Foil supplies (2013=100),,Foil supplies (2013=100)
+4,All-items,"Household operations, furnishings and equipment",Household operations,Other household goods and services,,,Other household goods and services
+5,All-items,"Household operations, furnishings and equipment",Household operations,Other household goods and services,Pet food and supplies,,Pet food and supplies
+5,All-items,"Household operations, furnishings and equipment",Household operations,Other household goods and services,"Seeds, plants and cut flowers",,"Seeds, plants and cut flowers"
+5,All-items,"Household operations, furnishings and equipment",Household operations,Other household goods and services,Other horticultural goods,,Other horticultural goods
+5,All-items,"Household operations, furnishings and equipment",Household operations,Other household goods and services,Other household supplies,,Other household supplies
+5,All-items,"Household operations, furnishings and equipment",Household operations,Other household goods and services,Other household services,,Other household services
+5,All-items,"Household operations, furnishings and equipment",Household operations,Other household goods and services,Financial services (200212=100),,Financial services (200212=100)
+5,All-items,"Household operations, furnishings and equipment",Household operations,Other household goods and services,Digital economy services (201812=100),,Digital economy services (201812=100)
+3,All-items,"Household operations, furnishings and equipment",Household furnishings and equipment,,,,Household furnishings and equipment
+4,All-items,"Household operations, furnishings and equipment",Household furnishings and equipment,Furniture and household textiles,,,Furniture and household textiles
+5,All-items,"Household operations, furnishings and equipment",Household furnishings and equipment,Furniture and household textiles,Furniture,,Furniture
+6,All-items,"Household operations, furnishings and equipment",Household furnishings and equipment,Furniture and household textiles,Furniture,Upholstered furniture,Upholstered furniture
+6,All-items,"Household operations, furnishings and equipment",Household furnishings and equipment,Furniture and household textiles,Furniture,Wooden furniture,Wooden furniture
+6,All-items,"Household operations, furnishings and equipment",Household furnishings and equipment,Furniture and household textiles,Furniture,Other furniture,Other furniture
+5,All-items,"Household operations, furnishings and equipment",Household furnishings and equipment,Furniture and household textiles,Household textiles,,Household textiles
+6,All-items,"Household operations, furnishings and equipment",Household furnishings and equipment,Furniture and household textiles,Household textiles,Window coverings,Window coverings
+6,All-items,"Household operations, furnishings and equipment",Household furnishings and equipment,Furniture and household textiles,Household textiles,Bedding and other household textiles,Bedding and other household textiles
+6,All-items,"Household operations, furnishings and equipment",Household furnishings and equipment,Furniture and household textiles,Household textiles,Area rugs and mats,Area rugs and mats
+4,All-items,"Household operations, furnishings and equipment",Household furnishings and equipment,Household equipment,,,Household equipment
+5,All-items,"Household operations, furnishings and equipment",Household furnishings and equipment,Household equipment,Household appliances,,Household appliances
+5,All-items,"Household operations, furnishings and equipment",Household furnishings and equipment,Household equipment,Cooking appliances,,Cooking appliances
+5,All-items,"Household operations, furnishings and equipment",Household furnishings and equipment,Household equipment,Refrigerators and freezers,,Refrigerators and freezers
+5,All-items,"Household operations, furnishings and equipment",Household furnishings and equipment,Household equipment,Laundry and dishwashing appliances,,Laundry and dishwashing appliances
+5,All-items,"Household operations, furnishings and equipment",Household furnishings and equipment,Household equipment,Other household appliances,,Other household appliances
+4,All-items,"Household operations, furnishings and equipment",Household furnishings and equipment,"Non-electric kitchen utensils, tableware and cookware",,,"Non-electric kitchen utensils, tableware and cookware"
+4,All-items,"Household operations, furnishings and equipment",Household furnishings and equipment,Tools and other household equipment,,,Tools and other household equipment
+5,All-items,"Household operations, furnishings and equipment",Household furnishings and equipment,Tools and other household equipment,"Household tools (including lawn, garden and snow removal equipment)",,"Household tools (including lawn, garden and snow removal equipment)"
+5,All-items,"Household operations, furnishings and equipment",Household furnishings and equipment,Tools and other household equipment,Other household equipment,,Other household equipment
+4,All-items,"Household operations, furnishings and equipment",Household furnishings and equipment,Services related to household furnishings and equipment,,,Services related to household furnishings and equipment
+2,All-items,Clothing and footwear,,,,,Clothing and footwear
+3,All-items,Clothing and footwear,Clothing,,,,Clothing
+4,All-items,Clothing and footwear,Clothing,Women's clothing,,,Women's clothing
+4,All-items,Clothing and footwear,Clothing,Men's clothing,,,Men's clothing
+4,All-items,Clothing and footwear,Clothing,Children's clothing,,,Children's clothing
+3,All-items,Clothing and footwear,Footwear,,,,Footwear
+4,All-items,Clothing and footwear,Footwear,Women's footwear (excluding athletic),,,Women's footwear (excluding athletic)
+4,All-items,Clothing and footwear,Footwear,Men's footwear (excluding athletic),,,Men's footwear (excluding athletic)
+4,All-items,Clothing and footwear,Footwear,Children's footwear (excluding athletic),,,Children's footwear (excluding athletic)
+4,All-items,Clothing and footwear,Footwear,Athletic footwear,,,Athletic footwear
+3,All-items,Clothing and footwear,"Clothing accessories, watches and jewellery",,,,"Clothing accessories, watches and jewellery"
+4,All-items,Clothing and footwear,"Clothing accessories, watches and jewellery",Clothing accessories (2013=100),,,Clothing accessories (2013=100)
+4,All-items,Clothing and footwear,"Clothing accessories, watches and jewellery",Leather clothing accessories,,,Leather clothing accessories
+4,All-items,Clothing and footwear,"Clothing accessories, watches and jewellery",Other clothing accessories,,,Other clothing accessories
+4,All-items,Clothing and footwear,"Clothing accessories, watches and jewellery",Watches,,,Watches
+4,All-items,Clothing and footwear,"Clothing accessories, watches and jewellery",Jewellery,,,Jewellery
+3,All-items,Clothing and footwear,"Clothing material, notions and services",,,,"Clothing material, notions and services"
+4,All-items,Clothing and footwear,"Clothing material, notions and services",Clothing material and notions,,,Clothing material and notions
+4,All-items,Clothing and footwear,"Clothing material, notions and services",Laundry services,,,Laundry services
+4,All-items,Clothing and footwear,"Clothing material, notions and services",Dry cleaning services,,,Dry cleaning services
+4,All-items,Clothing and footwear,"Clothing material, notions and services",Other clothing services,,,Other clothing services
+3,All-items,Transportation,Private transportation,,,,Private transportation
+4,All-items,Transportation,Private transportation,"Purchase, leasing and rental of passenger vehicles",,,"Purchase, leasing and rental of passenger vehicles"
+5,All-items,Transportation,Private transportation,"Purchase, leasing and rental of passenger vehicles",Purchase of automobiles (2013=100),,Purchase of automobiles (2013=100)
+5,All-items,Transportation,Private transportation,"Purchase, leasing and rental of passenger vehicles","Purchase of trucks, vans and sport utility vehicles (2013=100)",,"Purchase of trucks, vans and sport utility vehicles (2013=100)"
+5,All-items,Transportation,Private transportation,"Purchase, leasing and rental of passenger vehicles",Purchase and leasing of passenger vehicles,,Purchase and leasing of passenger vehicles
+6,All-items,Transportation,Private transportation,"Purchase, leasing and rental of passenger vehicles",Purchase and leasing of passenger vehicles,Purchase of passenger vehicles,Purchase of passenger vehicles
+6,All-items,Transportation,Private transportation,"Purchase, leasing and rental of passenger vehicles",Purchase and leasing of passenger vehicles,Leasing of passenger vehicles,Leasing of passenger vehicles
+5,All-items,Transportation,Private transportation,"Purchase, leasing and rental of passenger vehicles",Rental of passenger vehicles,,Rental of passenger vehicles
+4,All-items,Transportation,Private transportation,Operation of passenger vehicles,,,Operation of passenger vehicles
+5,All-items,Transportation,Private transportation,Operation of passenger vehicles,Gasoline,,Gasoline
+5,All-items,Transportation,Private transportation,Operation of passenger vehicles,"Passenger vehicle parts, maintenance and repairs",,"Passenger vehicle parts, maintenance and repairs"
+6,All-items,Transportation,Private transportation,Operation of passenger vehicles,"Passenger vehicle parts, maintenance and repairs","Passenger vehicle parts, accessories and supplies","Passenger vehicle parts, accessories and supplies"
+6,All-items,Transportation,Private transportation,Operation of passenger vehicles,"Passenger vehicle parts, maintenance and repairs",Passenger vehicle maintenance and repair services,Passenger vehicle maintenance and repair services
+5,All-items,Transportation,Private transportation,Operation of passenger vehicles,Other passenger vehicle operating expenses,,Other passenger vehicle operating expenses
+6,All-items,Transportation,Private transportation,Operation of passenger vehicles,Other passenger vehicle operating expenses,Passenger vehicle insurance premiums,Passenger vehicle insurance premiums
+6,All-items,Transportation,Private transportation,Operation of passenger vehicles,Other passenger vehicle operating expenses,Passenger vehicle registration fees,Passenger vehicle registration fees
+6,All-items,Transportation,Private transportation,Operation of passenger vehicles,Other passenger vehicle operating expenses,Drivers' licences,Drivers' licences
+6,All-items,Transportation,Private transportation,Operation of passenger vehicles,Other passenger vehicle operating expenses,Parking fees,Parking fees
+6,All-items,Transportation,Private transportation,Operation of passenger vehicles,Other passenger vehicle operating expenses,All other passenger vehicle operating expenses,All other passenger vehicle operating expenses
+3,All-items,Transportation,Public transportation,,,,Public transportation
+4,All-items,Transportation,Public transportation,Local and commuter transportation,,,Local and commuter transportation
+5,All-items,Transportation,Public transportation,Local and commuter transportation,City bus and subway transportation,,City bus and subway transportation
+5,All-items,Transportation,Public transportation,Local and commuter transportation,Taxi and other local and commuter transportation services,,Taxi and other local and commuter transportation services
+4,All-items,Transportation,Public transportation,Inter-city transportation,,,Inter-city transportation
+5,All-items,Transportation,Public transportation,Inter-city transportation,Air transportation,,Air transportation
+5,All-items,Transportation,Public transportation,Inter-city transportation,"Rail, highway bus and other inter-city transportation",,"Rail, highway bus and other inter-city transportation"
+2,All-items,Health and personal care,,,,,Health and personal care
+3,All-items,Health and personal care,Health care,,,,Health care
+4,All-items,Health and personal care,Health care,Health care goods,,,Health care goods
+5,All-items,Health and personal care,Health care,Health care goods,Medicinal and pharmaceutical products,,Medicinal and pharmaceutical products
+6,All-items,Health and personal care,Health care,Health care goods,Medicinal and pharmaceutical products,Prescribed medicines (excluding medicinal cannabis),Prescribed medicines (excluding medicinal cannabis)
+6,All-items,Health and personal care,Health care,Health care goods,Medicinal and pharmaceutical products,Non-prescribed medicines,Non-prescribed medicines
+6,All-items,Health and personal care,Health care,Health care goods,Medicinal and pharmaceutical products,Medicinal cannabis (201812=100),Medicinal cannabis (201812=100)
+5,All-items,Health and personal care,Health care,Health care goods,Eye care goods,,Eye care goods
+6,All-items,Health and personal care,Health care,Health care goods,Eye care goods,Prescription eyeglasses (2013=100),Prescription eyeglasses (2013=100)
+6,All-items,Health and personal care,Health care,Health care goods,Eye care goods,Contact lenses (2013=100),Contact lenses (2013=100)
+6,All-items,Health and personal care,Health care,Health care goods,Eye care goods,Other eye care goods (2013=100),Other eye care goods (2013=100)
+5,All-items,Health and personal care,Health care,Health care goods,Other health care goods,,Other health care goods
+4,All-items,Health and personal care,Health care,Health care services,,,Health care services
+5,All-items,Health and personal care,Health care,Health care services,Eye care services (200704=100),,Eye care services (200704=100)
+5,All-items,Health and personal care,Health care,Health care services,Dental care services,,Dental care services
+5,All-items,Health and personal care,Health care,Health care services,Other health care services,,Other health care services
+3,All-items,Health and personal care,Personal care,,,,Personal care
+4,All-items,Health and personal care,Personal care,Personal care supplies and equipment,,,Personal care supplies and equipment
+5,All-items,Health and personal care,Personal care,Personal care supplies and equipment,Personal soap,,Personal soap
+5,All-items,Health and personal care,Personal care,Personal care supplies and equipment,Toiletry items and cosmetics,,Toiletry items and cosmetics
+5,All-items,Health and personal care,Personal care,Personal care supplies and equipment,Oral-hygiene products,,Oral-hygiene products
+5,All-items,Health and personal care,Personal care,Personal care supplies and equipment,Other personal care supplies and equipment,,Other personal care supplies and equipment
+5,All-items,Health and personal care,Personal care,Personal care supplies and equipment,"Creams, lotions and cosmetics (2013=100)",,"Creams, lotions and cosmetics (2013=100)"
+5,All-items,Health and personal care,Personal care,Personal care supplies and equipment,Perfume and cologne (2013=100),,Perfume and cologne (2013=100)
+5,All-items,Health and personal care,Personal care,Personal care supplies and equipment,Hair preparations and other toilet preparations (2013=100),,Hair preparations and other toilet preparations (2013=100)
+4,All-items,Health and personal care,Personal care,Personal care services,,,Personal care services
+2,All-items,"Recreation, education and reading",,,,,"Recreation, education and reading"
+3,All-items,"Recreation, education and reading",Recreation,,,,Recreation
+4,All-items,"Recreation, education and reading",Recreation,Recreational equipment and services (excluding recreational vehicles),,,Recreational equipment and services (excluding recreational vehicles)
+5,All-items,"Recreation, education and reading",Recreation,Recreational equipment and services (excluding recreational vehicles),Sporting and exercise equipment,,Sporting and exercise equipment
+5,All-items,"Recreation, education and reading",Recreation,Recreational equipment and services (excluding recreational vehicles),"Toys, games (excluding video games) and hobby supplies",,"Toys, games (excluding video games) and hobby supplies"
+5,All-items,"Recreation, education and reading",Recreation,Recreational equipment and services (excluding recreational vehicles),Digital computing equipment and devices,,Digital computing equipment and devices
+6,All-items,"Recreation, education and reading",Recreation,Recreational equipment and services (excluding recreational vehicles),Digital computing equipment and devices,"Computer equipment, software and supplies (201104=100)","Computer equipment, software and supplies (201104=100)"
+6,All-items,"Recreation, education and reading",Recreation,Recreational equipment and services (excluding recreational vehicles),Digital computing equipment and devices,Multipurpose digital devices (201104=100),Multipurpose digital devices (201104=100)
+5,All-items,"Recreation, education and reading",Recreation,Recreational equipment and services (excluding recreational vehicles),Photographic equipment and supplies,,Photographic equipment and supplies
+5,All-items,"Recreation, education and reading",Recreation,Recreational equipment and services (excluding recreational vehicles),Other recreational equipment,,Other recreational equipment
+5,All-items,"Recreation, education and reading",Recreation,Recreational equipment and services (excluding recreational vehicles),Recreational services,,Recreational services
+4,All-items,"Recreation, education and reading",Recreation,Purchase and operation of recreational vehicles,,,Purchase and operation of recreational vehicles
+5,All-items,"Recreation, education and reading",Recreation,Purchase and operation of recreational vehicles,Purchase of recreational vehicles and outboard motors,,Purchase of recreational vehicles and outboard motors
+5,All-items,"Recreation, education and reading",Recreation,Purchase and operation of recreational vehicles,Operation of recreational vehicles,,Operation of recreational vehicles
+6,All-items,"Recreation, education and reading",Recreation,Purchase and operation of recreational vehicles,Operation of recreational vehicles,"Fuel, parts and accessories for recreational vehicles","Fuel, parts and accessories for recreational vehicles"
+6,All-items,"Recreation, education and reading",Recreation,Purchase and operation of recreational vehicles,Operation of recreational vehicles,"Insurance, licences and other services for recreational vehicles","Insurance, licences and other services for recreational vehicles"
+4,All-items,"Recreation, education and reading",Recreation,"Home entertainment equipment, parts and services",,,"Home entertainment equipment, parts and services"
+5,All-items,"Recreation, education and reading",Recreation,"Home entertainment equipment, parts and services",Audio equipment,,Audio equipment
+5,All-items,"Recreation, education and reading",Recreation,"Home entertainment equipment, parts and services",Video equipment,,Video equipment
+5,All-items,"Recreation, education and reading",Recreation,"Home entertainment equipment, parts and services",Rental of digital media,,Rental of digital media
+5,All-items,"Recreation, education and reading",Recreation,"Home entertainment equipment, parts and services",Purchase of digital media,,Purchase of digital media
+5,All-items,"Recreation, education and reading",Recreation,"Home entertainment equipment, parts and services","Other home entertainment equipment, parts and services",,"Other home entertainment equipment, parts and services"
+4,All-items,"Recreation, education and reading",Recreation,Travel services,,,Travel services
+5,All-items,"Recreation, education and reading",Recreation,Travel services,Traveller accommodation,,Traveller accommodation
+5,All-items,"Recreation, education and reading",Recreation,Travel services,Travel tours,,Travel tours
+4,All-items,"Recreation, education and reading",Recreation,Other cultural and recreational services,,,Other cultural and recreational services
+5,All-items,"Recreation, education and reading",Recreation,Other cultural and recreational services,Spectator entertainment (excluding video and audio subscription services),,Spectator entertainment (excluding video and audio subscription services)
+5,All-items,"Recreation, education and reading",Recreation,Other cultural and recreational services,Video and audio subscription services,,Video and audio subscription services
+5,All-items,"Recreation, education and reading",Recreation,Other cultural and recreational services,Use of recreational facilities and services,,Use of recreational facilities and services
+3,All-items,"Recreation, education and reading",Education and reading,,,,Education and reading
+4,All-items,"Recreation, education and reading",Education and reading,Education,,,Education
+5,All-items,"Recreation, education and reading",Education and reading,Education,Tuition fees,,Tuition fees
+5,All-items,"Recreation, education and reading",Education and reading,Education,School textbooks and supplies,,School textbooks and supplies
+5,All-items,"Recreation, education and reading",Education and reading,Education,"Other lessons, courses and education services",,"Other lessons, courses and education services"
+4,All-items,"Recreation, education and reading",Education and reading,Reading material (excluding textbooks),,,Reading material (excluding textbooks)
+5,All-items,"Recreation, education and reading",Education and reading,Reading material (excluding textbooks),Newspapers,,Newspapers
+5,All-items,"Recreation, education and reading",Education and reading,Reading material (excluding textbooks),Magazines and periodicals,,Magazines and periodicals
+5,All-items,"Recreation, education and reading",Education and reading,Reading material (excluding textbooks),Books and reading material (excluding textbooks),,Books and reading material (excluding textbooks)
+2,All-items,"Alcoholic beverages, tobacco products and recreational cannabis",,,,,"Alcoholic beverages, tobacco products and recreational cannabis"
+3,All-items,"Alcoholic beverages, tobacco products and recreational cannabis",Alcoholic beverages,,,,Alcoholic beverages
+4,All-items,"Alcoholic beverages, tobacco products and recreational cannabis",Alcoholic beverages,Alcoholic beverages served in licensed establishments,,,Alcoholic beverages served in licensed establishments
+5,All-items,"Alcoholic beverages, tobacco products and recreational cannabis",Alcoholic beverages,Alcoholic beverages served in licensed establishments,Beer served in licensed establishments,,Beer served in licensed establishments
+5,All-items,"Alcoholic beverages, tobacco products and recreational cannabis",Alcoholic beverages,Alcoholic beverages served in licensed establishments,Wine served in licensed establishments,,Wine served in licensed establishments
+5,All-items,"Alcoholic beverages, tobacco products and recreational cannabis",Alcoholic beverages,Alcoholic beverages served in licensed establishments,Liquor served in licensed establishments,,Liquor served in licensed establishments
+4,All-items,"Alcoholic beverages, tobacco products and recreational cannabis",Alcoholic beverages,Alcoholic beverages purchased from stores,,,Alcoholic beverages purchased from stores
+5,All-items,"Alcoholic beverages, tobacco products and recreational cannabis",Alcoholic beverages,Alcoholic beverages purchased from stores,Beer purchased from stores,,Beer purchased from stores
+5,All-items,"Alcoholic beverages, tobacco products and recreational cannabis",Alcoholic beverages,Alcoholic beverages purchased from stores,Wine purchased from stores,,Wine purchased from stores
+5,All-items,"Alcoholic beverages, tobacco products and recreational cannabis",Alcoholic beverages,Alcoholic beverages purchased from stores,Liquor purchased from stores,,Liquor purchased from stores
+2,All-items,"Alcoholic beverages, tobacco products and recreational cannabis",Tobacco products and smokers' supplies,,,,Tobacco products and smokers' supplies
+4,All-items,"Alcoholic beverages, tobacco products and recreational cannabis",Tobacco products and smokers' supplies,Cigarettes,,,Cigarettes
+4,All-items,"Alcoholic beverages, tobacco products and recreational cannabis",Tobacco products and smokers' supplies,Other tobacco products and smokers' supplies,,,Other tobacco products and smokers' supplies
+4,All-items,"Alcoholic beverages, tobacco products and recreational cannabis",Tobacco products and smokers' supplies,Recreational cannabis (201812=100),,,Recreational cannabis (201812=100)
