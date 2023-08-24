@@ -1,0 +1,8 @@
+path: C:/Users/FrankW/Desktop/test/Code_Monkeys/yolov8/dataset/ra_wholeset_aiplus_mc/
+train: 'images/train'
+val: 'images/val'
+
+# class names
+names:
+  0: 'benign'
+  1: 'malignant'

@@ -1,0 +1,10 @@
+path: './Data/All_Training_Datasets_yoloformat/'
+train: './Data/All_Training_Datasets_yoloformat/train'
+val: './Data/All_Training_Datasets_yoloformat/val'
+
+# # Classes
+# nc: 1  # number of classes
+
+# class names
+names:
+  0: 'tumor'
